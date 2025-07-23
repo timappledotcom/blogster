@@ -128,7 +128,8 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 If Blogster helps you create amazing content, consider supporting development:
 
-**Bitcoin**: `bc1qlfgxaq3cyx27rurq55ljhmsple9370lygputrf`
+**Bitcoin**: `bc1qlfgxaq3cyx27rurq55ljhmsple9370lygputrf`  
+**Lightning**: `ParzzixHQ@primal.net`
 
 ⚡ Every satoshi helps keep the project alive and open-source!
 

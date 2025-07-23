@@ -185,6 +185,74 @@ class SupportSettingsScreen extends StatelessWidget {
                             ],
                           ),
                         ),
+                        const SizedBox(height: 16),
+                        
+                        // Lightning Address Section
+                        Row(
+                          children: [
+                            const Icon(
+                              Icons.flash_on,
+                              color: Colors.amber,
+                              size: 20,
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              'Lightning Network',
+                              style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          'For instant Bitcoin payments over Lightning:',
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                        const SizedBox(height: 8),
+                        Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                            borderRadius: BorderRadius.circular(6),
+                            border: Border.all(
+                              color: Theme.of(context).colorScheme.outline.withOpacity(0.3),
+                            ),
+                          ),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: SelectableText(
+                                  'ParzzixHQ@primal.net',
+                                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                    fontFamily: 'Courier',
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              IconButton(
+                                icon: const Icon(Icons.copy, size: 18),
+                                onPressed: () {
+                                  Clipboard.setData(const ClipboardData(
+                                    text: 'ParzzixHQ@primal.net',
+                                  ));
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: const Text('Lightning address copied to clipboard!'),
+                                      duration: const Duration(seconds: 2),
+                                      behavior: SnackBarBehavior.floating,
+                                      action: SnackBarAction(
+                                        label: 'OK',
+                                        onPressed: () {},
+                                      ),
+                                    ),
+                                  );
+                                },
+                                tooltip: 'Copy Lightning address',
+                              ),
+                            ],
+                          ),
+                        ),
                         const SizedBox(height: 12),
                         Container(
                           padding: const EdgeInsets.all(12),
