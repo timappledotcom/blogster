@@ -1,0 +1,62 @@
+name: blogster
+description: "Blogster - The beautiful markdown editor for modern writers with Nostr publishing support"
+publish_to: 'none'
+version: 0.1.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+  flutter: ">=3.10.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # UI and theming
+  cupertino_icons: ^1.0.2
+
+  # Markdown processing
+  flutter_markdown: ^0.6.18
+  markdown: ^7.1.1
+
+  # Syntax highlighting
+  flutter_highlight: ^0.7.0
+  highlight: ^0.7.0
+
+  # Bech32 encoding/decoding for Nostr nsec
+  bech32: ^0.2.2
+
+  # WebSocket support for Nostr relays
+  web_socket_channel: ^2.4.0
+
+  # Proper cryptography for Nostr
+  pointycastle: ^3.7.3
+  convert: ^3.1.1
+
+  # File operations
+  file_picker: ^6.1.1
+  path_provider: ^2.1.1
+  path: ^1.8.3
+
+  # State management
+  provider: ^6.1.1
+
+  # HTTP requests
+  http: ^1.1.0
+
+  # Crypto for Nostr
+  crypto: ^3.0.3
+
+  # Better secp256k1 support for Nostr
+  bitcoin_base: ^3.0.0
+
+  # Secure storage for Nostr credentials
+  # flutter_secure_storage: ^9.0.0  # Linux linker issues persist even with Flutter 3.32.7
+  encrypted_shared_preferences: ^3.0.1  # Alternative secure storage
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true
