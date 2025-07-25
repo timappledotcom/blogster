@@ -5,6 +5,15 @@ All notable changes to Blogster will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0-3] - 2025-07-25
+
+### 🎨 Icon & Desktop Integration Fix
+- **FIXED**: Application icon now displays properly in dock and application menus
+- **ADDED**: Custom Blogster icon with professional design (pen and paper theme)
+- **IMPROVED**: Multiple icon sizes (48x48, 64x64, 128x128, 256x256, 512x512) for better scaling
+- **ENHANCED**: Better desktop integration with proper icon cache updates
+- **FIXED**: Minor null safety issue in file saving
+
 ## [0.2.0-2] - 2025-07-25
 
 ### 🔧 Package Installation Fix
