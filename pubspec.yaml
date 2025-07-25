@@ -1,7 +1,7 @@
 name: blogster
-description: "Blogster - The beautiful markdown editor for modern writers with Nostr publishing support"
+description: "Blogster - The beautiful markdown editor for modern writers with dual-platform publishing (Nostr & Micro.blog), image support, and advanced spellcheck"
 publish_to: 'none'
-version: 0.1.0+1
+version: 0.2.0+1
 
 environment:
   sdk: '>=3.0.0 <4.0.0'

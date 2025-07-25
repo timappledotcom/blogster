@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=Blogster
+Comment=Beautiful markdown editor with dual-platform publishing
+Exec=/usr/bin/blogster
+Icon=blogster
+Terminal=false
+Type=Application
+Categories=Office;WordProcessor;TextEditor;
+Keywords=markdown;editor;blog;nostr;microblog;writing;publishing;
+StartupNotify=true
+MimeType=text/markdown;text/x-markdown;
