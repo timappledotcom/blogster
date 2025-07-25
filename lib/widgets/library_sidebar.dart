@@ -38,7 +38,7 @@ class _LibrarySidebarState extends State<LibrarySidebar> {
     final screenWidth = MediaQuery.of(context).size.width;
     final isMobile = screenWidth < 768;
     final isInDrawer = Scaffold.maybeOf(context)?.hasDrawer == true;
-    
+
     return Consumer<LibraryProvider>(
       builder: (context, libraryProvider, child) {
         if (libraryProvider.libraryPath == null) {
@@ -46,15 +46,19 @@ class _LibrarySidebarState extends State<LibrarySidebar> {
         }
 
         return Container(
-          width: isMobile || isInDrawer ? double.infinity : (_isExpanded ? 300 : 60),
+          width: isMobile || isInDrawer
+              ? double.infinity
+              : (_isExpanded ? 300 : 60),
           decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.surface,
-            border: isInDrawer ? null : Border(
-              right: BorderSide(
-                color: Theme.of(context).dividerColor,
-                width: 1,
-              ),
-            ),
+            border: isInDrawer
+                ? null
+                : Border(
+                    right: BorderSide(
+                      color: Theme.of(context).dividerColor,
+                      width: 1,
+                    ),
+                  ),
           ),
           child: Column(
             children: [
@@ -144,7 +148,7 @@ class _LibrarySidebarState extends State<LibrarySidebar> {
     final screenWidth = MediaQuery.of(context).size.width;
     final isMobile = screenWidth < 768;
     final isInDrawer = Scaffold.maybeOf(context)?.hasDrawer == true;
-    
+
     return Container(
       padding: const EdgeInsets.all(8),
       child: Row(
@@ -165,8 +169,8 @@ class _LibrarySidebarState extends State<LibrarySidebar> {
               child: Text(
                 'Library',
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+                      fontWeight: FontWeight.bold,
+                    ),
               ),
             ),
             PopupMenuButton<String>(
@@ -233,7 +237,8 @@ class _LibrarySidebarState extends State<LibrarySidebar> {
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
           ),
-          contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         ),
         onChanged: (value) {
           setState(() {
@@ -255,7 +260,8 @@ class _LibrarySidebarState extends State<LibrarySidebar> {
               icon: const Icon(Icons.add, size: 16),
               label: const Text('New'),
               style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               ),
             ),
           ),
@@ -268,10 +274,11 @@ class _LibrarySidebarState extends State<LibrarySidebar> {
     final allDocuments = libraryProvider.documents;
     final filteredDocuments = _searchQuery.isEmpty
         ? allDocuments
-        : allDocuments.where((doc) => 
-            doc.title.toLowerCase().contains(_searchQuery) ||
-            doc.filename.toLowerCase().contains(_searchQuery)
-          ).toList();
+        : allDocuments
+            .where((doc) =>
+                doc.title.toLowerCase().contains(_searchQuery) ||
+                doc.filename.toLowerCase().contains(_searchQuery))
+            .toList();
 
     if (libraryProvider.isLoading) {
       return const Center(child: CircularProgressIndicator());
@@ -289,13 +296,13 @@ class _LibrarySidebarState extends State<LibrarySidebar> {
             ),
             const SizedBox(height: 16),
             Text(
-              _searchQuery.isEmpty 
+              _searchQuery.isEmpty
                   ? 'No documents yet\nCreate your first document!'
                   : 'No documents match your search',
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(context).colorScheme.outline,
-              ),
+                    color: Theme.of(context).colorScheme.outline,
+                  ),
             ),
           ],
         ),
@@ -303,7 +310,8 @@ class _LibrarySidebarState extends State<LibrarySidebar> {
     }
 
     // Group documents by posted status
-    final unpostedDocs = filteredDocuments.where((doc) => !doc.isPosted).toList();
+    final unpostedDocs =
+        filteredDocuments.where((doc) => !doc.isPosted).toList();
     final postedDocs = filteredDocuments.where((doc) => doc.isPosted).toList();
 
     // Sort drafts by last modified date (most recent first)
@@ -313,31 +321,36 @@ class _LibrarySidebarState extends State<LibrarySidebar> {
       padding: const EdgeInsets.symmetric(horizontal: 8),
       children: [
         if (unpostedDocs.isNotEmpty) ...[
-          _buildCollapsibleSectionHeader('Drafts', unpostedDocs.length, _isDraftsExpanded, (expanded) {
+          _buildCollapsibleSectionHeader(
+              'Drafts', unpostedDocs.length, _isDraftsExpanded, (expanded) {
             setState(() {
               _isDraftsExpanded = expanded;
             });
           }),
           if (_isDraftsExpanded) ...[
-            ...unpostedDocs.map((doc) => _buildDocumentTile(doc, libraryProvider)),
+            ...unpostedDocs
+                .map((doc) => _buildDocumentTile(doc, libraryProvider)),
             const SizedBox(height: 8),
           ],
         ],
         if (postedDocs.isNotEmpty) ...[
-          _buildCollapsibleSectionHeader('Posted', postedDocs.length, _isPostedExpanded, (expanded) {
+          _buildCollapsibleSectionHeader(
+              'Posted', postedDocs.length, _isPostedExpanded, (expanded) {
             setState(() {
               _isPostedExpanded = expanded;
             });
           }),
           if (_isPostedExpanded) ...[
-            ...postedDocs.map((doc) => _buildDocumentTile(doc, libraryProvider)),
+            ...postedDocs
+                .map((doc) => _buildDocumentTile(doc, libraryProvider)),
           ],
         ],
       ],
     );
   }
 
-  Widget _buildCollapsibleSectionHeader(String title, int count, bool isExpanded, Function(bool) onToggle) {
+  Widget _buildCollapsibleSectionHeader(
+      String title, int count, bool isExpanded, Function(bool) onToggle) {
     return InkWell(
       onTap: () => onToggle(!isExpanded),
       child: Padding(
@@ -353,9 +366,9 @@ class _LibrarySidebarState extends State<LibrarySidebar> {
             Text(
               title,
               style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                fontWeight: FontWeight.bold,
-                color: Theme.of(context).colorScheme.primary,
-              ),
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
             ),
             const SizedBox(width: 8),
             Container(
@@ -367,9 +380,9 @@ class _LibrarySidebarState extends State<LibrarySidebar> {
               child: Text(
                 count.toString(),
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                  color: Theme.of(context).colorScheme.onPrimaryContainer,
-                  fontWeight: FontWeight.bold,
-                ),
+                      color: Theme.of(context).colorScheme.onPrimaryContainer,
+                      fontWeight: FontWeight.bold,
+                    ),
               ),
             ),
           ],
@@ -378,42 +391,44 @@ class _LibrarySidebarState extends State<LibrarySidebar> {
     );
   }
 
-  Widget _buildDocumentTile(BlogsterDocument document, LibraryProvider libraryProvider) {
+  Widget _buildDocumentTile(
+      BlogsterDocument document, LibraryProvider libraryProvider) {
     final isSelected = libraryProvider.currentDocument?.id == document.id;
-    
+
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 2),
       elevation: isSelected ? 4 : 1,
-      color: isSelected 
-          ? Theme.of(context).colorScheme.primaryContainer 
-          : null,
+      color: isSelected ? Theme.of(context).colorScheme.primaryContainer : null,
       child: ListTile(
         dense: true,
         leading: Icon(
           document.isPosted ? Icons.check_circle : Icons.edit_outlined,
-          color: document.isPosted 
-              ? Colors.green 
+          color: document.isPosted
+              ? Colors.green
               : Theme.of(context).colorScheme.primary,
           size: 20,
         ),
         title: Text(
           document.title,
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-            color: isSelected 
-                ? Theme.of(context).colorScheme.onPrimaryContainer
-                : null,
-          ),
+                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                color: isSelected
+                    ? Theme.of(context).colorScheme.onPrimaryContainer
+                    : null,
+              ),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
         subtitle: Text(
           document.filename,
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
-            color: isSelected 
-                ? Theme.of(context).colorScheme.onPrimaryContainer.withOpacity(0.7)
-                : Theme.of(context).colorScheme.outline,
-          ),
+                color: isSelected
+                    ? Theme.of(context)
+                        .colorScheme
+                        .onPrimaryContainer
+                        .withOpacity(0.7)
+                    : Theme.of(context).colorScheme.outline,
+              ),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
@@ -421,11 +436,12 @@ class _LibrarySidebarState extends State<LibrarySidebar> {
           icon: Icon(
             Icons.more_vert,
             size: 16,
-            color: isSelected 
+            color: isSelected
                 ? Theme.of(context).colorScheme.onPrimaryContainer
                 : null,
           ),
-          onSelected: (value) => _handleDocumentAction(value, document, libraryProvider),
+          onSelected: (value) =>
+              _handleDocumentAction(value, document, libraryProvider),
           itemBuilder: (context) => [
             const PopupMenuItem(
               value: 'rename',
@@ -466,7 +482,8 @@ class _LibrarySidebarState extends State<LibrarySidebar> {
   }
 
   // Event handlers
-  Future<void> _initializeDefaultLibrary(LibraryProvider libraryProvider) async {
+  Future<void> _initializeDefaultLibrary(
+      LibraryProvider libraryProvider) async {
     await libraryProvider.initializeLibrary();
   }
 
@@ -491,7 +508,8 @@ class _LibrarySidebarState extends State<LibrarySidebar> {
     }
   }
 
-  void _handleDocumentAction(String action, BlogsterDocument document, LibraryProvider libraryProvider) {
+  void _handleDocumentAction(String action, BlogsterDocument document,
+      LibraryProvider libraryProvider) {
     switch (action) {
       case 'rename':
         _showRenameDialog(document, libraryProvider);
@@ -508,26 +526,27 @@ class _LibrarySidebarState extends State<LibrarySidebar> {
   Future<void> _createNewDocument() async {
     final libraryProvider = context.read<LibraryProvider>();
     final editorProvider = context.read<EditorProvider>();
-    
+
     // Create a new document file immediately
     final newDocument = await libraryProvider.createNewDocumentFile();
-    
+
     if (newDocument != null) {
       // Load the new document content into the editor
       editorProvider.updateContent(newDocument.content);
-      
+
       // Close drawer on mobile after creating new document
       _closeMobileDrawer();
     }
   }
 
-  Future<void> _loadDocument(BlogsterDocument document, LibraryProvider libraryProvider) async {
+  Future<void> _loadDocument(
+      BlogsterDocument document, LibraryProvider libraryProvider) async {
     await libraryProvider.loadDocument(document.id);
-    
+
     // Update editor content
     if (mounted) {
       context.read<EditorProvider>().updateContent(document.content);
-      
+
       // Close drawer on mobile after loading document
       _closeMobileDrawer();
     }
@@ -550,9 +569,11 @@ class _LibrarySidebarState extends State<LibrarySidebar> {
     );
   }
 
-  void _showRenameDialog(BlogsterDocument document, LibraryProvider libraryProvider) {
-    final controller = TextEditingController(text: document.filename.replaceAll('.md', ''));
-    
+  void _showRenameDialog(
+      BlogsterDocument document, LibraryProvider libraryProvider) {
+    final controller =
+        TextEditingController(text: document.filename.replaceAll('.md', ''));
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -585,12 +606,14 @@ class _LibrarySidebarState extends State<LibrarySidebar> {
     );
   }
 
-  void _showDeleteConfirmation(BlogsterDocument document, LibraryProvider libraryProvider) {
+  void _showDeleteConfirmation(
+      BlogsterDocument document, LibraryProvider libraryProvider) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Delete Document'),
-        content: Text('Are you sure you want to delete "${document.title}"? This action cannot be undone.'),
+        content: Text(
+            'Are you sure you want to delete "${document.title}"? This action cannot be undone.'),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),

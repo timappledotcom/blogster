@@ -29,9 +29,10 @@ class SupportSettingsScreen extends StatelessWidget {
                       const SizedBox(width: 8),
                       Text(
                         'Made with ❤️ by Tim Apple @ Parzzix',
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style:
+                            Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
                       ),
                     ],
                   ),
@@ -54,32 +55,44 @@ class SupportSettingsScreen extends StatelessWidget {
                       children: [
                         Text(
                           'About Parzzix',
-                          style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: Theme.of(context).colorScheme.onPrimaryContainer,
-                          ),
+                          style:
+                              Theme.of(context).textTheme.titleSmall?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onPrimaryContainer,
+                                  ),
                         ),
                         const SizedBox(height: 8),
                         Text(
                           'Blogster is developed with passion as part of the Parzzix ecosystem - open-source tools built by hobbyists, for hobbyists. No subscriptions, no telemetry, just great software.',
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: Theme.of(context).colorScheme.onPrimaryContainer,
-                          ),
+                          style:
+                              Theme.of(context).textTheme.bodySmall?.copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onPrimaryContainer,
+                                  ),
                         ),
                         const SizedBox(height: 12),
                         Text(
                           'Our Philosophy',
-                          style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: Theme.of(context).colorScheme.onPrimaryContainer,
-                          ),
+                          style:
+                              Theme.of(context).textTheme.titleSmall?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onPrimaryContainer,
+                                  ),
                         ),
                         const SizedBox(height: 4),
                         Text(
                           '• Linux/CLI-first approach\n• No vendor lock-in or subscriptions\n• Privacy-focused development\n• Community-driven features\n• Transparent and open source',
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: Theme.of(context).colorScheme.onPrimaryContainer,
-                          ),
+                          style:
+                              Theme.of(context).textTheme.bodySmall?.copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onPrimaryContainer,
+                                  ),
                         ),
                       ],
                     ),
@@ -97,16 +110,17 @@ class SupportSettingsScreen extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.currency_bitcoin,
                         color: Colors.orange,
                       ),
                       const SizedBox(width: 8),
                       Text(
                         'Bitcoin Tips Welcome',
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style:
+                            Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
                       ),
                     ],
                   ),
@@ -114,10 +128,14 @@ class SupportSettingsScreen extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.surfaceVariant,
+                      color:
+                          Theme.of(context).colorScheme.surfaceContainerHighest,
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(
-                        color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
+                        color: Theme.of(context)
+                            .colorScheme
+                            .outline
+                            .withOpacity(0.2),
                       ),
                     ),
                     child: Column(
@@ -125,9 +143,10 @@ class SupportSettingsScreen extends StatelessWidget {
                       children: [
                         Text(
                           'Support Development',
-                          style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style:
+                              Theme.of(context).textTheme.titleSmall?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
                         ),
                         const SizedBox(height: 8),
                         Text(
@@ -137,9 +156,10 @@ class SupportSettingsScreen extends StatelessWidget {
                         const SizedBox(height: 16),
                         Text(
                           'Bitcoin Address:',
-                          style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style:
+                              Theme.of(context).textTheme.titleSmall?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
                         ),
                         const SizedBox(height: 8),
                         Container(
@@ -148,7 +168,10 @@ class SupportSettingsScreen extends StatelessWidget {
                             color: Theme.of(context).colorScheme.surface,
                             borderRadius: BorderRadius.circular(6),
                             border: Border.all(
-                              color: Theme.of(context).colorScheme.outline.withOpacity(0.3),
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .outline
+                                  .withOpacity(0.3),
                             ),
                           ),
                           child: Row(
@@ -156,21 +179,26 @@ class SupportSettingsScreen extends StatelessWidget {
                               Expanded(
                                 child: SelectableText(
                                   'bc1qlfgxaq3cyx27rurq55ljhmsple9370lygputrf',
-                                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                    fontFamily: 'Courier',
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodySmall
+                                      ?.copyWith(
+                                        fontFamily: 'Courier',
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                 ),
                               ),
                               IconButton(
                                 icon: const Icon(Icons.copy, size: 18),
                                 onPressed: () {
                                   Clipboard.setData(const ClipboardData(
-                                    text: 'bc1qlfgxaq3cyx27rurq55ljhmsple9370lygputrf',
+                                    text:
+                                        'bc1qlfgxaq3cyx27rurq55ljhmsple9370lygputrf',
                                   ));
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
-                                      content: const Text('Bitcoin address copied to clipboard!'),
+                                      content: const Text(
+                                          'Bitcoin address copied to clipboard!'),
                                       duration: const Duration(seconds: 2),
                                       behavior: SnackBarBehavior.floating,
                                       action: SnackBarAction(
@@ -186,7 +214,7 @@ class SupportSettingsScreen extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 16),
-                        
+
                         // Lightning Address Section
                         Row(
                           children: [
@@ -198,9 +226,12 @@ class SupportSettingsScreen extends StatelessWidget {
                             const SizedBox(width: 8),
                             Text(
                               'Lightning Network',
-                              style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                                fontWeight: FontWeight.bold,
-                              ),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleSmall
+                                  ?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
                             ),
                           ],
                         ),
@@ -213,10 +244,15 @@ class SupportSettingsScreen extends StatelessWidget {
                         Container(
                           padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
-                            color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                            color: Theme.of(context)
+                                .colorScheme
+                                .surfaceContainerHighest,
                             borderRadius: BorderRadius.circular(6),
                             border: Border.all(
-                              color: Theme.of(context).colorScheme.outline.withOpacity(0.3),
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .outline
+                                  .withOpacity(0.3),
                             ),
                           ),
                           child: Row(
@@ -224,10 +260,13 @@ class SupportSettingsScreen extends StatelessWidget {
                               Expanded(
                                 child: SelectableText(
                                   'ParzzixHQ@primal.net',
-                                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                    fontFamily: 'Courier',
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodySmall
+                                      ?.copyWith(
+                                        fontFamily: 'Courier',
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                 ),
                               ),
                               IconButton(
@@ -238,7 +277,8 @@ class SupportSettingsScreen extends StatelessWidget {
                                   ));
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
-                                      content: const Text('Lightning address copied to clipboard!'),
+                                      content: const Text(
+                                          'Lightning address copied to clipboard!'),
                                       duration: const Duration(seconds: 2),
                                       behavior: SnackBarBehavior.floating,
                                       action: SnackBarAction(
@@ -262,7 +302,7 @@ class SupportSettingsScreen extends StatelessWidget {
                           ),
                           child: Row(
                             children: [
-                              Icon(
+                              const Icon(
                                 Icons.lightbulb_outline,
                                 color: Colors.orange,
                                 size: 16,
@@ -271,10 +311,13 @@ class SupportSettingsScreen extends StatelessWidget {
                               Expanded(
                                 child: Text(
                                   'Tips help fund development time, server costs, and new features!',
-                                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                    color: Colors.orange[800],
-                                    fontStyle: FontStyle.italic,
-                                  ),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodySmall
+                                      ?.copyWith(
+                                        color: Colors.orange[800],
+                                        fontStyle: FontStyle.italic,
+                                      ),
                                 ),
                               ),
                             ],
@@ -296,16 +339,17 @@ class SupportSettingsScreen extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.favorite,
                         color: Colors.red,
                       ),
                       const SizedBox(width: 8),
                       Text(
                         'Other Ways to Support',
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style:
+                            Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
                       ),
                     ],
                   ),
@@ -313,21 +357,27 @@ class SupportSettingsScreen extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.surfaceVariant,
+                      color:
+                          Theme.of(context).colorScheme.surfaceContainerHighest,
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _buildSupportItem(context, '⭐', 'Star us on GitHub', 'Show your appreciation and help others discover Blogster'),
+                        _buildSupportItem(context, '⭐', 'Star us on GitHub',
+                            'Show your appreciation and help others discover Blogster'),
                         const SizedBox(height: 8),
-                        _buildSupportItem(context, '🐛', 'Report bugs', 'Help us improve by reporting issues you encounter'),
+                        _buildSupportItem(context, '🐛', 'Report bugs',
+                            'Help us improve by reporting issues you encounter'),
                         const SizedBox(height: 8),
-                        _buildSupportItem(context, '💡', 'Suggest features', 'Share your ideas for making Blogster even better'),
+                        _buildSupportItem(context, '💡', 'Suggest features',
+                            'Share your ideas for making Blogster even better'),
                         const SizedBox(height: 8),
-                        _buildSupportItem(context, '📢', 'Spread the word', 'Tell other writers about Blogster'),
+                        _buildSupportItem(context, '📢', 'Spread the word',
+                            'Tell other writers about Blogster'),
                         const SizedBox(height: 8),
-                        _buildSupportItem(context, '⚡', 'Use Nostr publishing', 'Help grow the decentralized web by publishing your content'),
+                        _buildSupportItem(context, '⚡', 'Use Nostr publishing',
+                            'Help grow the decentralized web by publishing your content'),
                       ],
                     ),
                   ),
@@ -340,7 +390,8 @@ class SupportSettingsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSupportItem(BuildContext context, String emoji, String title, String description) {
+  Widget _buildSupportItem(
+      BuildContext context, String emoji, String title, String description) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -356,14 +407,18 @@ class SupportSettingsScreen extends StatelessWidget {
               Text(
                 title,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+                      fontWeight: FontWeight.bold,
+                    ),
               ),
               Text(
                 description,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Theme.of(context).textTheme.bodySmall?.color?.withOpacity(0.7),
-                ),
+                      color: Theme.of(context)
+                          .textTheme
+                          .bodySmall
+                          ?.color
+                          ?.withOpacity(0.7),
+                    ),
               ),
             ],
           ),

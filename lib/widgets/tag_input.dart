@@ -56,7 +56,7 @@ class _TagInputState extends State<TagInput> {
           ),
           onSubmitted: (_) => _addTag(),
         ),
-        
+
         // Tag chips
         if (widget.tags.isNotEmpty) ...[
           const SizedBox(height: 12),

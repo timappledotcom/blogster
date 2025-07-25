@@ -15,14 +15,15 @@ class LibraryProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
   String? get libraryPath => _libraryService.libraryPath;
   List<BlogsterDocument> get documents => _libraryService.documents;
-  List<BlogsterDocument> get unpostedDocuments => _libraryService.unpostedDocuments;
+  List<BlogsterDocument> get unpostedDocuments =>
+      _libraryService.unpostedDocuments;
   List<BlogsterDocument> get postedDocuments => _libraryService.postedDocuments;
 
   /// Initialize the library
   Future<void> initializeLibrary([String? customPath]) async {
     _setLoading(true);
     _setError(null);
-    
+
     try {
       await _libraryService.initializeLibrary(customPath);
       notifyListeners();
@@ -34,11 +35,13 @@ class LibraryProvider extends ChangeNotifier {
   }
 
   /// Create a new document
-  Future<BlogsterDocument?> createDocument(String content, [String? customFilename]) async {
+  Future<BlogsterDocument?> createDocument(String content,
+      [String? customFilename]) async {
     _setError(null);
-    
+
     try {
-      final document = await _libraryService.createDocument(content, customFilename);
+      final document =
+          await _libraryService.createDocument(content, customFilename);
       _currentDocument = document;
       notifyListeners();
       return document;
@@ -55,11 +58,12 @@ class LibraryProvider extends ChangeNotifier {
       await createDocument(content);
       return;
     }
-    
+
     _setError(null);
-    
+
     try {
-      final updatedDocument = await _libraryService.updateDocument(_currentDocument!.id, content);
+      final updatedDocument =
+          await _libraryService.updateDocument(_currentDocument!.id, content);
       _currentDocument = updatedDocument;
       notifyListeners();
     } catch (e) {
@@ -70,7 +74,7 @@ class LibraryProvider extends ChangeNotifier {
   /// Load a document as current
   Future<void> loadDocument(String documentId) async {
     _setError(null);
-    
+
     try {
       final document = _libraryService.getDocument(documentId);
       if (document != null) {
@@ -87,15 +91,16 @@ class LibraryProvider extends ChangeNotifier {
   /// Rename a document
   Future<void> renameDocument(String documentId, String newFilename) async {
     _setError(null);
-    
+
     try {
-      final updatedDocument = await _libraryService.renameDocument(documentId, newFilename);
-      
+      final updatedDocument =
+          await _libraryService.renameDocument(documentId, newFilename);
+
       // Update current document if it was renamed
       if (_currentDocument?.id == documentId) {
         _currentDocument = updatedDocument;
       }
-      
+
       notifyListeners();
     } catch (e) {
       _setError('Failed to rename document: $e');
@@ -103,17 +108,25 @@ class LibraryProvider extends ChangeNotifier {
   }
 
   /// Mark a document as posted
-  Future<void> markDocumentAsPosted(String documentId) async {
+  Future<void> markDocumentAsPosted(
+    String documentId, {
+    List<String>? tags,
+    List<String>? publishedPlatforms,
+  }) async {
     _setError(null);
-    
+
     try {
-      final updatedDocument = await _libraryService.markAsPosted(documentId);
-      
+      final updatedDocument = await _libraryService.markAsPosted(
+        documentId,
+        tags: tags,
+        publishedPlatforms: publishedPlatforms,
+      );
+
       // Update current document if it was marked as posted
       if (_currentDocument?.id == documentId) {
         _currentDocument = updatedDocument;
       }
-      
+
       notifyListeners();
     } catch (e) {
       _setError('Failed to mark document as posted: $e');
@@ -123,15 +136,15 @@ class LibraryProvider extends ChangeNotifier {
   /// Delete a document
   Future<void> deleteDocument(String documentId) async {
     _setError(null);
-    
+
     try {
       await _libraryService.deleteDocument(documentId);
-      
+
       // Clear current document if it was deleted
       if (_currentDocument?.id == documentId) {
         _currentDocument = null;
       }
-      
+
       notifyListeners();
     } catch (e) {
       _setError('Failed to delete document: $e');
@@ -148,7 +161,7 @@ class LibraryProvider extends ChangeNotifier {
   Future<void> refresh() async {
     _setLoading(true);
     _setError(null);
-    
+
     try {
       await _libraryService.refresh();
       notifyListeners();
@@ -163,7 +176,7 @@ class LibraryProvider extends ChangeNotifier {
   Future<void> changeLibraryLocation(String newPath) async {
     _setLoading(true);
     _setError(null);
-    
+
     try {
       await _libraryService.changeLibraryLocation(newPath);
       _currentDocument = null; // Clear current document when changing location
@@ -188,7 +201,7 @@ class LibraryProvider extends ChangeNotifier {
     if (content.trim().isEmpty) {
       return; // Don't auto-save empty content
     }
-    
+
     if (_currentDocument == null) {
       // Create new document for non-empty content
       await createDocument(content);
@@ -201,7 +214,7 @@ class LibraryProvider extends ChangeNotifier {
   /// Create a new document immediately (for "New" button)
   Future<BlogsterDocument?> createNewDocumentFile() async {
     _setError(null);
-    
+
     try {
       // Create a truly blank document - empty string will generate date/time title
       final document = await _libraryService.createDocument('');

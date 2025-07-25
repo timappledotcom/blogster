@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Blogster
+Comment=Beautiful markdown editor with Nostr publishing
+Exec=blogster
+Icon=blogster
+Terminal=false
+Categories=Office;WordProcessor;
+StartupWMClass=blogster
+MimeType=text/markdown;text/plain;

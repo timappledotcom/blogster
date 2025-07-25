@@ -30,9 +30,10 @@ class AppearanceSettingsScreen extends StatelessWidget {
                       const SizedBox(width: 8),
                       Text(
                         'Theme Settings',
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style:
+                            Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
                       ),
                     ],
                   ),
@@ -49,7 +50,8 @@ class AppearanceSettingsScreen extends StatelessWidget {
                                 Text('Light Mode'),
                               ],
                             ),
-                            subtitle: const Text('Clean, bright interface for daytime use'),
+                            subtitle: const Text(
+                                'Clean, bright interface for daytime use'),
                             value: false,
                             groupValue: themeProvider.isDarkMode,
                             onChanged: (value) {
@@ -66,7 +68,8 @@ class AppearanceSettingsScreen extends StatelessWidget {
                                 Text('Dark Mode'),
                               ],
                             ),
-                            subtitle: const Text('Easy on the eyes for long writing sessions'),
+                            subtitle: const Text(
+                                'Easy on the eyes for long writing sessions'),
                             value: true,
                             groupValue: themeProvider.isDarkMode,
                             onChanged: (value) {
@@ -99,9 +102,10 @@ class AppearanceSettingsScreen extends StatelessWidget {
                       const SizedBox(width: 8),
                       Text(
                         'Theme Information',
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style:
+                            Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
                       ),
                     ],
                   ),
@@ -109,7 +113,8 @@ class AppearanceSettingsScreen extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.surfaceVariant,
+                      color:
+                          Theme.of(context).colorScheme.surfaceContainerHighest,
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Column(
@@ -117,9 +122,10 @@ class AppearanceSettingsScreen extends StatelessWidget {
                       children: [
                         Text(
                           'Light Mode',
-                          style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style:
+                              Theme.of(context).textTheme.titleSmall?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
                         ),
                         const SizedBox(height: 4),
                         Text(
@@ -129,9 +135,10 @@ class AppearanceSettingsScreen extends StatelessWidget {
                         const SizedBox(height: 12),
                         Text(
                           'Dark Mode',
-                          style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style:
+                              Theme.of(context).textTheme.titleSmall?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
                         ),
                         const SizedBox(height: 4),
                         Text(

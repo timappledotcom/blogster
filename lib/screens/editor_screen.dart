@@ -6,9 +6,11 @@ import 'dart:async';
 import '../providers/editor_provider.dart';
 import '../providers/theme_provider.dart';
 import '../providers/library_provider.dart';
+import '../providers/nostr_credentials_provider.dart';
+import '../providers/microblog_credentials_provider.dart';
 import '../widgets/toolbar.dart';
 import '../widgets/status_bar.dart';
-import '../widgets/nostr_publish_dialog.dart';
+import '../widgets/publish_dialog.dart';
 import '../widgets/syntax_highlighter.dart';
 import '../widgets/library_sidebar.dart';
 import '../widgets/tag_input.dart';
@@ -32,8 +34,9 @@ class _EditorScreenState extends State<EditorScreen> {
   void initState() {
     super.initState();
     final editorProvider = Provider.of<EditorProvider>(context, listen: false);
-    final libraryProvider = Provider.of<LibraryProvider>(context, listen: false);
-    
+    final libraryProvider =
+        Provider.of<LibraryProvider>(context, listen: false);
+
     _controller.text = editorProvider.content;
     _controller.addListener(() {
       editorProvider.updateContent(_controller.text);
@@ -43,13 +46,23 @@ class _EditorScreenState extends State<EditorScreen> {
     // Listen to editor provider changes and update controller
     editorProvider.addListener(_updateControllerFromProvider);
 
-    // Initialize library on startup
+    // Initialize library and credentials on startup
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await libraryProvider.initializeLibrary();
       // Auto-save the default content if library is empty
-      if (libraryProvider.documents.isEmpty && editorProvider.content.trim().isNotEmpty) {
+      if (libraryProvider.documents.isEmpty &&
+          editorProvider.content.trim().isNotEmpty) {
         await libraryProvider.autoSave(editorProvider.content);
       }
+
+      // Load saved credentials
+      final nostrCredentialsProvider =
+          Provider.of<NostrCredentialsProvider>(context, listen: false);
+      final microblogCredentialsProvider =
+          Provider.of<MicroblogCredentialsProvider>(context, listen: false);
+
+      await nostrCredentialsProvider.loadCredentials();
+      await microblogCredentialsProvider.loadCredentials();
     });
   }
 
@@ -70,7 +83,7 @@ class _EditorScreenState extends State<EditorScreen> {
   Future<void> _autoSave() async {
     final libraryProvider = context.read<LibraryProvider>();
     final content = _controller.text;
-    
+
     if (content.trim().isNotEmpty) {
       await libraryProvider.autoSave(content);
     }
@@ -95,13 +108,15 @@ class _EditorScreenState extends State<EditorScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Blogster'),
-        leading: isMobile ? Builder(
-          builder: (context) => IconButton(
-            icon: const Icon(Icons.menu),
-            onPressed: () => Scaffold.of(context).openDrawer(),
-            tooltip: 'Open Library',
-          ),
-        ) : null,
+        leading: isMobile
+            ? Builder(
+                builder: (context) => IconButton(
+                  icon: const Icon(Icons.menu),
+                  onPressed: () => Scaffold.of(context).openDrawer(),
+                  tooltip: 'Open Library',
+                ),
+              )
+            : null,
         actions: [
           Consumer<EditorProvider>(
             builder: (context, provider, child) {
@@ -125,8 +140,8 @@ class _EditorScreenState extends State<EditorScreen> {
                   const SizedBox(width: 8),
                   IconButton(
                     icon: const Icon(Icons.share),
-                    onPressed: () => _showNostrDialog(context),
-                    tooltip: 'Publish to Nostr',
+                    onPressed: () => _showPublishDialog(context),
+                    tooltip: 'Publish Post',
                   ),
                   const SizedBox(width: 8),
                   IconButton(
@@ -151,34 +166,35 @@ class _EditorScreenState extends State<EditorScreen> {
                 _buildTagsSection(),
                 Expanded(
                   child: Consumer<EditorProvider>(
-              builder: (context, provider, child) {
-                if (provider.error != null) {
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: SelectableText(
-                          provider.error!,
-                          style: const TextStyle(color: Colors.white),
-                        ),
-                        duration: const Duration(seconds: 10), // Longer duration for copying
-                        action: SnackBarAction(
-                          label: 'Dismiss',
-                          onPressed: provider.clearError,
-                        ),
-                        behavior: SnackBarBehavior.floating,
-                      ),
-                    );
-                  });
-                }
+                    builder: (context, provider, child) {
+                      if (provider.error != null) {
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: SelectableText(
+                                provider.error!,
+                                style: const TextStyle(color: Colors.white),
+                              ),
+                              duration: const Duration(
+                                  seconds: 10), // Longer duration for copying
+                              action: SnackBarAction(
+                                label: 'Dismiss',
+                                onPressed: provider.clearError,
+                              ),
+                              behavior: SnackBarBehavior.floating,
+                            ),
+                          );
+                        });
+                      }
 
-                return _buildEditor(provider);
-              },
+                      return _buildEditor(provider);
+                    },
+                  ),
+                ),
+                const StatusBar(),
+              ],
             ),
           ),
-          const StatusBar(),
-        ],
-            ),
-      ),
         ],
       ),
     );
@@ -236,7 +252,7 @@ class _EditorScreenState extends State<EditorScreen> {
         builder: (context, themeProvider, child) {
           final isDarkMode = themeProvider.isDarkMode ||
               (themeProvider.isSystemMode &&
-               MediaQuery.of(context).platformBrightness == Brightness.dark);
+                  MediaQuery.of(context).platformBrightness == Brightness.dark);
 
           return Markdown(
             data: content,
@@ -247,51 +263,58 @@ class _EditorScreenState extends State<EditorScreen> {
               'pre': CodeElementBuilder(isDarkMode: isDarkMode),
               'code': CodeElementBuilder(isDarkMode: isDarkMode),
             },
-            styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context)).copyWith(
+            styleSheet:
+                MarkdownStyleSheet.fromTheme(Theme.of(context)).copyWith(
               h1: Theme.of(context).textTheme.displaySmall?.copyWith(
-                fontFamily: 'Georgia',
-                fontWeight: FontWeight.w600,
-                height: 1.2,
-                letterSpacing: -0.5,
-              ),
+                    fontFamily: 'Georgia',
+                    fontWeight: FontWeight.w600,
+                    height: 1.2,
+                    letterSpacing: -0.5,
+                  ),
               h2: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                fontFamily: 'Georgia',
-                fontWeight: FontWeight.w600,
-                height: 1.3,
-                letterSpacing: -0.3,
-              ),
+                    fontFamily: 'Georgia',
+                    fontWeight: FontWeight.w600,
+                    height: 1.3,
+                    letterSpacing: -0.3,
+                  ),
               h3: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                fontFamily: 'Georgia',
-                fontWeight: FontWeight.w600,
-                height: 1.4,
-              ),
+                    fontFamily: 'Georgia',
+                    fontWeight: FontWeight.w600,
+                    height: 1.4,
+                  ),
               h4: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontFamily: 'Georgia',
-                fontWeight: FontWeight.w600,
-              ),
+                    fontFamily: 'Georgia',
+                    fontWeight: FontWeight.w600,
+                  ),
               h5: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontFamily: 'Georgia',
-                fontWeight: FontWeight.w600,
-              ),
+                    fontFamily: 'Georgia',
+                    fontWeight: FontWeight.w600,
+                  ),
               h6: Theme.of(context).textTheme.titleSmall?.copyWith(
-                fontFamily: 'Georgia',
-                fontWeight: FontWeight.w600,
-              ),
+                    fontFamily: 'Georgia',
+                    fontWeight: FontWeight.w600,
+                  ),
               p: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                fontFamily: 'Inter',
-                height: 1.7,
-                fontSize: 16,
-              ),
+                    fontFamily: 'Inter',
+                    height: 1.7,
+                    fontSize: 16,
+                  ),
               blockquote: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                fontFamily: 'Georgia',
-                fontStyle: FontStyle.italic,
-                height: 1.6,
-                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.8),
-              ),
+                    fontFamily: 'Georgia',
+                    fontStyle: FontStyle.italic,
+                    height: 1.6,
+                    color: Theme.of(context)
+                        .colorScheme
+                        .onSurface
+                        .withOpacity(0.8),
+                  ),
               code: TextStyle(
                 fontFamily: 'JetBrains Mono',
                 fontSize: 14,
-                backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest.withOpacity(0.8),
+                backgroundColor: Theme.of(context)
+                    .colorScheme
+                    .surfaceContainerHighest
+                    .withOpacity(0.8),
                 color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),
               // Remove default code block styling since we're using custom builder
@@ -305,19 +328,20 @@ class _EditorScreenState extends State<EditorScreen> {
                   ),
                 ),
               ),
-              blockquotePadding: const EdgeInsets.only(left: 16, top: 8, bottom: 8),
+              blockquotePadding:
+                  const EdgeInsets.only(left: 16, top: 8, bottom: 8),
               listBullet: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                fontFamily: 'Inter',
-                height: 1.6,
-              ),
+                    fontFamily: 'Inter',
+                    height: 1.6,
+                  ),
               tableHead: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontFamily: 'Inter',
-                fontWeight: FontWeight.w600,
-              ),
+                    fontFamily: 'Inter',
+                    fontWeight: FontWeight.w600,
+                  ),
               tableBody: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                fontFamily: 'Inter',
-                height: 1.5,
-              ),
+                    fontFamily: 'Inter',
+                    height: 1.5,
+                  ),
             ),
           );
         },
@@ -325,10 +349,10 @@ class _EditorScreenState extends State<EditorScreen> {
     );
   }
 
-  void _showNostrDialog(BuildContext context) {
+  void _showPublishDialog(BuildContext context) {
     showDialog(
       context: context,
-      builder: (context) => const NostrPublishDialog(),
+      builder: (context) => const PublishDialog(),
     );
   }
 
@@ -341,8 +365,17 @@ class _EditorScreenState extends State<EditorScreen> {
   }
 
   Widget _buildTagsSection() {
-    return Consumer<EditorProvider>(
-      builder: (context, provider, child) {
+    return Consumer2<EditorProvider, LibraryProvider>(
+      builder: (context, editorProvider, libraryProvider, child) {
+        // Determine which tags to show:
+        // - If viewing a specific document, show its tags
+        // - If creating/editing, show editor provider tags
+        final currentDocument = libraryProvider.currentDocument;
+        final isViewingDocument = currentDocument != null;
+        final tagsToShow =
+            isViewingDocument ? currentDocument.tags : editorProvider.tags;
+        final canEdit = !isViewingDocument || !currentDocument.isPosted;
+
         return Card(
           margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
           child: Column(
@@ -357,7 +390,8 @@ class _EditorScreenState extends State<EditorScreen> {
                 },
                 child: Container(
                   height: 40,
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   child: Row(
                     children: [
                       Icon(
@@ -366,29 +400,63 @@ class _EditorScreenState extends State<EditorScreen> {
                         color: Theme.of(context).colorScheme.primary,
                       ),
                       const SizedBox(width: 8),
-                      const Text(
-                        'Tags',
-                        style: TextStyle(
+                      Text(
+                        isViewingDocument && currentDocument.isPosted
+                            ? 'Published Tags'
+                            : 'Tags',
+                        style: const TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: 14,
                         ),
                       ),
-                      if (provider.tags.isNotEmpty) ...[
+                      if (tagsToShow.isNotEmpty) ...[
                         const SizedBox(width: 8),
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 6, vertical: 2),
                           decoration: BoxDecoration(
-                            color: Theme.of(context).colorScheme.primaryContainer,
+                            color:
+                                Theme.of(context).colorScheme.primaryContainer,
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: Text(
-                            '${provider.tags.length}',
+                            '${tagsToShow.length}',
                             style: TextStyle(
                               fontSize: 12,
-                              color: Theme.of(context).colorScheme.onPrimaryContainer,
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onPrimaryContainer,
                             ),
                           ),
                         ),
+                      ],
+                      // Show published platforms for posted documents
+                      if (isViewingDocument &&
+                          currentDocument.isPosted &&
+                          currentDocument.publishedPlatforms.isNotEmpty) ...[
+                        const SizedBox(width: 8),
+                        ...currentDocument.publishedPlatforms
+                            .map((platform) => Container(
+                                  margin: const EdgeInsets.only(left: 4),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 6, vertical: 2),
+                                  decoration: BoxDecoration(
+                                    color: platform == 'Nostr'
+                                        ? Colors.purple.withOpacity(0.2)
+                                        : Colors.blue.withOpacity(0.2),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: Text(
+                                    platform,
+                                    style: TextStyle(
+                                      fontSize: 10,
+                                      color: platform == 'Nostr'
+                                          ? Colors.purple[700]
+                                          : Colors.blue[700],
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                )),
                       ],
                       const Spacer(),
                       Icon(
@@ -399,7 +467,7 @@ class _EditorScreenState extends State<EditorScreen> {
                   ),
                 ),
               ),
-              
+
               // Expanded tags content
               if (_showTags) ...[
                 const Divider(height: 1),
@@ -407,12 +475,14 @@ class _EditorScreenState extends State<EditorScreen> {
                   constraints: const BoxConstraints(maxHeight: 150),
                   child: SingleChildScrollView(
                     padding: const EdgeInsets.all(12),
-                    child: TagInput(
-                      tags: provider.tags,
-                      onTagAdd: provider.addTag,
-                      onTagRemove: provider.removeTag,
-                      hint: 'Add tags for this post...',
-                    ),
+                    child: canEdit
+                        ? TagInput(
+                            tags: tagsToShow,
+                            onTagAdd: editorProvider.addTag,
+                            onTagRemove: editorProvider.removeTag,
+                            hint: 'Add tags for this post...',
+                          )
+                        : _buildReadOnlyTags(tagsToShow),
                   ),
                 ),
               ],
@@ -420,6 +490,30 @@ class _EditorScreenState extends State<EditorScreen> {
           ),
         );
       },
+    );
+  }
+
+  Widget _buildReadOnlyTags(List<String> tags) {
+    if (tags.isEmpty) {
+      return const Text(
+        'No tags were used when this post was published.',
+        style: TextStyle(
+          fontStyle: FontStyle.italic,
+          color: Colors.grey,
+        ),
+      );
+    }
+
+    return Wrap(
+      spacing: 8,
+      runSpacing: 4,
+      children: tags
+          .map((tag) => Chip(
+                label: Text(tag),
+                backgroundColor:
+                    Theme.of(context).colorScheme.surfaceContainerHighest,
+              ))
+          .toList(),
     );
   }
 }

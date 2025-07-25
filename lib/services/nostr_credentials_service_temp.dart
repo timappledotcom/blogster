@@ -120,9 +120,7 @@ class NostrCredentialsService {
 
   Future<void> addCredential(NostrCredential credential) async {
     _credentials.add(credential);
-    if (_currentCredentialId == null) {
-      _currentCredentialId = credential.id;
-    }
+    _currentCredentialId ??= credential.id;
   }
 
   Future<void> updateCredential(NostrCredential credential) async {

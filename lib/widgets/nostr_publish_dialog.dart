@@ -29,7 +29,8 @@ class _NostrPublishDialogState extends State<NostrPublishDialog> {
   @override
   Widget build(BuildContext context) {
     return Consumer3<EditorProvider, NostrCredentialsProvider, LibraryProvider>(
-      builder: (context, editorProvider, credentialsProvider, libraryProvider, child) {
+      builder: (context, editorProvider, credentialsProvider, libraryProvider,
+          child) {
         // If no credentials are available, show setup message
         if (credentialsProvider.credentials.isEmpty) {
           return AlertDialog(
@@ -170,8 +171,8 @@ class _NostrPublishDialogState extends State<NostrPublishDialog> {
               onPressed: editorProvider.isLoading ||
                       credentialsProvider.currentCredential == null
                   ? null
-                  : () => _publishNote(
-                      context, editorProvider, credentialsProvider, libraryProvider),
+                  : () => _publishNote(context, editorProvider,
+                      credentialsProvider, libraryProvider),
               child: editorProvider.isLoading
                   ? const SizedBox(
                       width: 16,
@@ -220,14 +221,16 @@ class _NostrPublishDialogState extends State<NostrPublishDialog> {
 
       // Mark the current document as posted if it exists
       if (libraryProvider.currentDocument != null) {
-        await libraryProvider.markDocumentAsPosted(libraryProvider.currentDocument!.id);
+        await libraryProvider
+            .markDocumentAsPosted(libraryProvider.currentDocument!.id);
       }
 
       if (context.mounted) {
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Successfully published to Nostr and moved to posted folder!'),
+            content: Text(
+                'Successfully published to Nostr and moved to posted folder!'),
             backgroundColor: Colors.green,
           ),
         );

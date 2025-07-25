@@ -33,12 +33,14 @@ class NostrCredentialsProvider extends ChangeNotifier {
   }
 
   /// Generate a new random credential
-  Future<void> generateCredential(String name, {bool setAsDefault = false}) async {
+  Future<void> generateCredential(String name,
+      {bool setAsDefault = false}) async {
     _setLoading(true);
     _clearError();
 
     try {
-      await _credentialsService.generateCredential(name, setAsDefault: setAsDefault);
+      await _credentialsService.generateCredential(name,
+          setAsDefault: setAsDefault);
       await loadCredentials();
     } catch (e) {
       _setError('Failed to generate credential: $e');
@@ -48,12 +50,14 @@ class NostrCredentialsProvider extends ChangeNotifier {
   }
 
   /// Import credential from private key
-  Future<void> importCredential(String name, String privateKeyHex, {bool setAsDefault = false}) async {
+  Future<void> importCredential(String name, String privateKeyHex,
+      {bool setAsDefault = false}) async {
     _setLoading(true);
     _clearError();
 
     try {
-      await _credentialsService.importCredential(name, privateKeyHex, setAsDefault: setAsDefault);
+      await _credentialsService.importCredential(name, privateKeyHex,
+          setAsDefault: setAsDefault);
       await loadCredentials();
     } catch (e) {
       _setError('Failed to import credential: $e');

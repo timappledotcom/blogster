@@ -178,7 +178,8 @@ class _NostrCredentialsScreenState extends State<NostrCredentialsScreen> {
     );
   }
 
-  Future<void> _exportCredential(BuildContext context, NostrCredential credential) async {
+  Future<void> _exportCredential(
+      BuildContext context, NostrCredential credential) async {
     final privateKey = await context
         .read<NostrCredentialsProvider>()
         .exportCredential(credential.id);
@@ -624,8 +625,9 @@ class _AddCredentialDialogState extends State<_AddCredentialDialog> {
       if (_privateKeyController.text.trim().isEmpty) return false;
       if (_conversionError != null) return false;
       // For nsec format, also check that hex conversion worked
-      if (_keyFormat == 'nsec' && _hexController.text.trim().isEmpty)
+      if (_keyFormat == 'nsec' && _hexController.text.trim().isEmpty) {
         return false;
+      }
     }
     return true;
   }

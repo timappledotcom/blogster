@@ -2,9 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'dart:math';
 import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
-import 'package:pointycastle/export.dart';
 import 'package:convert/convert.dart';
-import 'package:crypto/crypto.dart';
 import '../crypto/corrected_bip340_schnorr.dart';
 
 class NostrCredential {
@@ -30,22 +28,23 @@ class NostrCredential {
   }
 
   Map<String, dynamic> toJson() => {
-    'id': id,
-    'name': name,
-    'privateKey': privateKey,
-    'publicKey': publicKey,
-    'createdAt': createdAt.toIso8601String(),
-    'isDefault': isDefault,
-  };
+        'id': id,
+        'name': name,
+        'privateKey': privateKey,
+        'publicKey': publicKey,
+        'createdAt': createdAt.toIso8601String(),
+        'isDefault': isDefault,
+      };
 
-  factory NostrCredential.fromJson(Map<String, dynamic> json) => NostrCredential(
-    id: json['id'],
-    name: json['name'],
-    privateKey: json['privateKey'],
-    publicKey: json['publicKey'],
-    createdAt: DateTime.parse(json['createdAt']),
-    isDefault: json['isDefault'] ?? false,
-  );
+  factory NostrCredential.fromJson(Map<String, dynamic> json) =>
+      NostrCredential(
+        id: json['id'],
+        name: json['name'],
+        privateKey: json['privateKey'],
+        publicKey: json['publicKey'],
+        createdAt: DateTime.parse(json['createdAt']),
+        isDefault: json['isDefault'] ?? false,
+      );
 
   NostrCredential copyWith({
     String? id,
@@ -54,28 +53,30 @@ class NostrCredential {
     String? publicKey,
     DateTime? createdAt,
     bool? isDefault,
-  }) => NostrCredential(
-    id: id ?? this.id,
-    name: name ?? this.name,
-    privateKey: privateKey ?? this.privateKey,
-    publicKey: publicKey ?? this.publicKey,
-    createdAt: createdAt ?? this.createdAt,
-    isDefault: isDefault ?? this.isDefault,
-  );
+  }) =>
+      NostrCredential(
+        id: id ?? this.id,
+        name: name ?? this.name,
+        privateKey: privateKey ?? this.privateKey,
+        publicKey: publicKey ?? this.publicKey,
+        createdAt: createdAt ?? this.createdAt,
+        isDefault: isDefault ?? this.isDefault,
+      );
 }
 
 class NostrCredentialsService {
   static const String _credentialsKey = 'nostr_credentials';
   static const String _defaultCredentialKey = 'default_credential_id';
-  
+
   late final EncryptedSharedPreferences _encryptedPrefs;
-  
+
   NostrCredentialsService() {
     _encryptedPrefs = EncryptedSharedPreferences();
   }
 
   /// Generate a new Nostr credential with a random private key
-  Future<NostrCredential> generateCredential(String name, {bool setAsDefault = false}) async {
+  Future<NostrCredential> generateCredential(String name,
+      {bool setAsDefault = false}) async {
     print('Generating new credential: $name');
     try {
       // Generate random 32-byte private key
@@ -84,13 +85,16 @@ class NostrCredentialsService {
       for (int i = 0; i < 32; i++) {
         privateKeyBytes[i] = random.nextInt(256);
       }
-      
-      final privateKeyHex = privateKeyBytes.map((b) => b.toRadixString(16).padLeft(2, '0')).join();
-      
+
+      final privateKeyHex = privateKeyBytes
+          .map((b) => b.toRadixString(16).padLeft(2, '0'))
+          .join();
+
       // Generate public key from private key using BIP-340
-      final publicKeyBytes = CorrectedBIP340Schnorr.getXOnlyPublicKey(privateKeyBytes);
+      final publicKeyBytes =
+          CorrectedBIP340Schnorr.getXOnlyPublicKey(privateKeyBytes);
       final publicKeyHex = hex.encode(publicKeyBytes);
-      
+
       final credential = NostrCredential(
         id: _generateId(),
         name: name,
@@ -101,7 +105,7 @@ class NostrCredentialsService {
       );
 
       await _storeCredential(credential);
-      
+
       if (setAsDefault) {
         await _setDefaultCredential(credential.id);
       }
@@ -115,21 +119,25 @@ class NostrCredentialsService {
   }
 
   /// Import an existing credential from a private key
-  Future<NostrCredential> importCredential(String name, String privateKeyHex, {bool setAsDefault = false}) async {
+  Future<NostrCredential> importCredential(String name, String privateKeyHex,
+      {bool setAsDefault = false}) async {
     print('Importing credential: $name');
     try {
       // Validate private key length
       if (privateKeyHex.length != 64) {
-        throw ArgumentError('Invalid private key length. Must be 64 hex characters.');
+        throw ArgumentError(
+            'Invalid private key length. Must be 64 hex characters.');
       }
 
       // Convert hex to bytes
-      final privateKeyBytes = Uint8List.fromList(
-        List.generate(32, (i) => int.parse(privateKeyHex.substring(i * 2, i * 2 + 2), radix: 16))
-      );
+      final privateKeyBytes = Uint8List.fromList(List.generate(
+          32,
+          (i) =>
+              int.parse(privateKeyHex.substring(i * 2, i * 2 + 2), radix: 16)));
 
       // Generate public key from private key using BIP-340
-      final publicKeyBytes = CorrectedBIP340Schnorr.getXOnlyPublicKey(privateKeyBytes);
+      final publicKeyBytes =
+          CorrectedBIP340Schnorr.getXOnlyPublicKey(privateKeyBytes);
       final publicKeyHex = hex.encode(publicKeyBytes);
 
       final credential = NostrCredential(
@@ -142,7 +150,7 @@ class NostrCredentialsService {
       );
 
       await _storeCredential(credential);
-      
+
       if (setAsDefault) {
         await _setDefaultCredential(credential.id);
       }
@@ -184,7 +192,9 @@ class NostrCredentialsService {
       final credentials = await getAllCredentials();
       return credentials.firstWhere(
         (cred) => cred.id == defaultId,
-        orElse: () => credentials.isNotEmpty ? credentials.first : throw StateError('No credentials found'),
+        orElse: () => credentials.isNotEmpty
+            ? credentials.first
+            : throw StateError('No credentials found'),
       );
     } catch (e) {
       print('Error getting default credential: $e');
@@ -226,8 +236,9 @@ class NostrCredentialsService {
   Future<void> deleteCredential(String credentialId) async {
     try {
       final credentials = await getAllCredentials();
-      final updatedCredentials = credentials.where((cred) => cred.id != credentialId).toList();
-      
+      final updatedCredentials =
+          credentials.where((cred) => cred.id != credentialId).toList();
+
       await _storeAllCredentials(updatedCredentials);
 
       // If this was the default credential, clear the default
@@ -251,7 +262,7 @@ class NostrCredentialsService {
         (cred) => cred.id == credentialId,
         orElse: () => throw ArgumentError('Credential not found'),
       );
-      
+
       return credential.privateKey;
     } catch (e) {
       print('Error exporting credential: $e');
@@ -263,7 +274,8 @@ class NostrCredentialsService {
   Future<bool> isNameTaken(String name, {String? excludeId}) async {
     try {
       final credentials = await getAllCredentials();
-      return credentials.any((cred) => cred.name == name && cred.id != excludeId);
+      return credentials
+          .any((cred) => cred.name == name && cred.id != excludeId);
     } catch (e) {
       print('Error checking name availability: $e');
       return false;
@@ -284,8 +296,8 @@ class NostrCredentialsService {
 
   // Private helper methods
   String _generateId() {
-    return DateTime.now().millisecondsSinceEpoch.toString() + 
-           Random().nextInt(1000).toString();
+    return DateTime.now().millisecondsSinceEpoch.toString() +
+        Random().nextInt(1000).toString();
   }
 
   Future<void> _storeCredential(NostrCredential credential) async {
@@ -295,7 +307,8 @@ class NostrCredentialsService {
   }
 
   Future<void> _storeAllCredentials(List<NostrCredential> credentials) async {
-    final credentialsJson = jsonEncode(credentials.map((c) => c.toJson()).toList());
+    final credentialsJson =
+        jsonEncode(credentials.map((c) => c.toJson()).toList());
     await _encryptedPrefs.setString(_credentialsKey, credentialsJson);
   }
 

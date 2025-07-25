@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'providers/editor_provider.dart';
 import 'providers/theme_provider.dart';
 import 'providers/nostr_credentials_provider.dart';
+import 'providers/microblog_credentials_provider.dart';
 import 'providers/library_provider.dart';
 import 'screens/editor_screen.dart';
 
@@ -20,6 +21,8 @@ class BlogsterApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => EditorProvider()),
         ChangeNotifierProvider(create: (context) => ThemeProvider()),
         ChangeNotifierProvider(create: (context) => NostrCredentialsProvider()),
+        ChangeNotifierProvider(
+            create: (context) => MicroblogCredentialsProvider()),
         ChangeNotifierProvider(create: (context) => LibraryProvider()),
       ],
       child: Consumer<ThemeProvider>(

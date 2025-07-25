@@ -1,0 +1,20 @@
+Package: blogster
+Version: 0.1.1-1
+Section: editors
+Priority: optional
+Architecture: amd64
+Depends: libc6, libstdc++6, libglib2.0-0, libgtk-3-0
+Maintainer: Parzzix <support@parzzix.com>
+Description: Beautiful markdown editor with Nostr publishing
+ Blogster is a minimalist, distraction-free markdown editor with
+ live preview and decentralized publishing support via Nostr protocol.
+ .
+ Features include:
+ - Clean, distraction-free writing interface
+ - Live markdown preview with split-screen mode
+ - Tag support for content organization
+ - Nostr protocol integration for decentralized publishing
+ - Dark and light themes
+ - Cross-platform support
+ - Auto-save functionality
+Homepage: https://github.com/Parzzix/blogster

@@ -65,7 +65,7 @@ class NostrCredentialsProvider extends ChangeNotifier {
   }
       final credential =
           await _credentialsService.importCredential(name, privateKeyHex);
-      await addCredential(credential, setAsDefault: setAsDefault);
+      await addCredential(credential, setAsDefault = setAsDefault);
     } catch (e) {
       _setError('Failed to import credential: $e');
     } finally {

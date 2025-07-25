@@ -11,7 +11,7 @@ Blogster is a minimalist, distraction-free markdown editor designed for content 
 ## ✨ Features
 
 - **📝 Clean Interface**: Distraction-free writing environment with customizable themes
-- **👀 Live Preview**: Switch between edit, preview, and split modes instantly  
+- **👀 Live Preview**: Switch between edit, preview, and split modes instantly
 - **🌙 Dark Mode**: Easy on the eyes for long writing sessions
 - **📱 Responsive Design**: Works beautifully on desktop and mobile devices
 - **📚 Document Library**: Organize your drafts and published posts with collapsible sections
@@ -128,7 +128,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 If Blogster helps you create amazing content, consider supporting development:
 
-**Bitcoin**: `bc1qlfgxaq3cyx27rurq55ljhmsple9370lygputrf`  
+**Bitcoin**: `bc1qlfgxaq3cyx27rurq55ljhmsple9370lygputrf`
 **Lightning**: `ParzzixHQ@primal.net`
 
 ⚡ Every satoshi helps keep the project alive and open-source!

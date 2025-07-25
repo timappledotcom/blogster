@@ -105,7 +105,10 @@ greetUser('Developer');
   }
 
   void setTags(List<String> newTags) {
-    _tags = newTags.map((tag) => tag.trim().toLowerCase()).where((tag) => tag.isNotEmpty).toList();
+    _tags = newTags
+        .map((tag) => tag.trim().toLowerCase())
+        .where((tag) => tag.isNotEmpty)
+        .toList();
     notifyListeners();
   }
 

@@ -13,7 +13,7 @@ class NostrKeyUtils {
       // Convert bytes to 5-bit groups for bech32
       final fiveBitData = _convertTo5BitGroups(bytes);
       final bech32Data = Bech32('nsec', fiveBitData);
-      final codec = Bech32Codec();
+      const codec = Bech32Codec();
       return codec.encode(bech32Data);
     } catch (e) {
       throw ArgumentError('Invalid hex key format: $e');
@@ -27,7 +27,7 @@ class NostrKeyUtils {
     }
 
     try {
-      final codec = Bech32Codec();
+      const codec = Bech32Codec();
       final decoded = codec.decode(nsecKey);
 
       if (decoded.hrp != 'nsec') {
@@ -57,7 +57,7 @@ class NostrKeyUtils {
       // Convert bytes to 5-bit groups for bech32
       final fiveBitData = _convertTo5BitGroups(bytes);
       final bech32Data = Bech32('npub', fiveBitData);
-      final codec = Bech32Codec();
+      const codec = Bech32Codec();
       return codec.encode(bech32Data);
     } catch (e) {
       throw ArgumentError('Invalid hex key format: $e');
@@ -71,7 +71,7 @@ class NostrKeyUtils {
     }
 
     try {
-      final codec = Bech32Codec();
+      const codec = Bech32Codec();
       final decoded = codec.decode(npubKey);
 
       if (decoded.hrp != 'npub') {

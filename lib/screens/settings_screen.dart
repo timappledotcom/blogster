@@ -92,8 +92,8 @@ class SettingsScreen extends StatelessWidget {
         title: Text(
           title,
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
+                fontWeight: FontWeight.bold,
+              ),
         ),
         subtitle: Text(subtitle),
         trailing: const Icon(Icons.chevron_right),

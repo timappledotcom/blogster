@@ -3,7 +3,7 @@ import 'dart:typed_data';
 import 'package:crypto/crypto.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import '../crypto/corrected_bip340_schnorr.dart';
-import 'nostr_credentials_service_temp.dart';
+import 'nostr_credentials_service_encrypted.dart';
 
 class NostrService {
   /// Publish a note using a specific credential, or the default if none provided
@@ -78,6 +78,7 @@ class NostrService {
         privateKey: privateKey,
         publicKey: '', // Will be generated
         createdAt: DateTime.now(),
+        isDefault: false,
       ),
     );
   }
