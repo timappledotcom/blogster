@@ -1,0 +1,22 @@
+Package: blogster
+Version: 0.2.0-2
+Section: editors
+Priority: optional
+Architecture: amd64
+Depends: libc6, libgtk-3-0, libglib2.0-0
+Maintainer: Tim Parkin <tim@parzzix.net>
+Description: Beautiful markdown editor with dual-platform publishing
+ Blogster is a modern, beautiful markdown editor designed for writers who want
+ to publish to multiple platforms. Features include:
+ .
+ * Dual-platform publishing to Nostr and Micro.blog
+ * Advanced spellcheck with 370k+ word dictionary
+ * Image upload support (Micro.blog, nostr.build, Imgur)
+ * Live preview with syntax highlighting
+ * Tag and category management
+ * Dark mode support
+ * Cross-platform compatibility
+ .
+ Perfect for bloggers, technical writers, and content creators who want to
+ reach audiences on both decentralized and traditional platforms.
+Homepage: https://github.com/Parzzix/blogster

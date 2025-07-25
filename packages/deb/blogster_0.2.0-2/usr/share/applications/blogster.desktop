@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Blogster
+Comment=Beautiful markdown editor with dual-platform publishing
+Exec=/opt/blogster/blogster
+Icon=text-editor
+Terminal=false
+Type=Application
+Categories=Office;TextEditor;
+MimeType=text/markdown;text/plain;

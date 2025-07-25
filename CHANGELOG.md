@@ -5,6 +5,14 @@ All notable changes to Blogster will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0-2] - 2025-07-25
+
+### 🔧 Package Installation Fix
+- **FIXED**: Package installation conflicts with other Flutter applications
+- **CHANGED**: Moved installation from `/usr/bin/` to `/opt/blogster/` to prevent conflicts
+- **IMPROVED**: Better cross-platform package compatibility
+- **NOTE**: If you have version 0.2.0-1 installed, please uninstall it first before installing 0.2.0-2
+
 ## [0.2.0] - 2025-07-25
 
 ### 🚀 Major Features Added
