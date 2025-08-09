@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 enum UbuntuAccentColor {
   orange(
@@ -80,9 +81,11 @@ enum UbuntuAccentColor {
 class ThemeProvider extends ChangeNotifier {
   ThemeMode _themeMode = ThemeMode.system;
   UbuntuAccentColor _accentColor = UbuntuAccentColor.orange;
+  bool _isLoaded = false;
 
   ThemeMode get themeMode => _themeMode;
   UbuntuAccentColor get accentColor => _accentColor;
+  bool get isLoaded => _isLoaded;
 
   bool get isDarkMode {
     return _themeMode == ThemeMode.dark;
@@ -96,17 +99,45 @@ class ThemeProvider extends ChangeNotifier {
     return _themeMode == ThemeMode.system;
   }
 
-  void setThemeMode(ThemeMode mode) {
+  // Load theme settings from SharedPreferences
+  Future<void> loadThemeSettings() async {
+    final prefs = await SharedPreferences.getInstance();
+    
+    // Load theme mode
+    final themeIndex = prefs.getInt('theme_mode') ?? ThemeMode.system.index;
+    _themeMode = ThemeMode.values[themeIndex];
+    
+    // Load accent color
+    final accentColorName = prefs.getString('accent_color') ?? UbuntuAccentColor.orange.name;
+    _accentColor = UbuntuAccentColor.values.firstWhere(
+      (color) => color.name == accentColorName,
+      orElse: () => UbuntuAccentColor.orange,
+    );
+    
+    _isLoaded = true;
+    notifyListeners();
+  }
+
+  // Save theme settings to SharedPreferences
+  Future<void> _saveThemeSettings() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('theme_mode', _themeMode.index);
+    await prefs.setString('accent_color', _accentColor.name);
+  }
+
+  void setThemeMode(ThemeMode mode) async {
     _themeMode = mode;
+    await _saveThemeSettings();
     notifyListeners();
   }
 
-  void setAccentColor(UbuntuAccentColor color) {
+  void setAccentColor(UbuntuAccentColor color) async {
     _accentColor = color;
+    await _saveThemeSettings();
     notifyListeners();
   }
 
-  void toggleTheme() {
+  void toggleTheme() async {
     if (_themeMode == ThemeMode.light) {
       _themeMode = ThemeMode.dark;
     } else if (_themeMode == ThemeMode.dark) {
@@ -114,6 +145,7 @@ class ThemeProvider extends ChangeNotifier {
     } else {
       _themeMode = ThemeMode.light;
     }
+    await _saveThemeSettings();
     notifyListeners();
   }
 }

@@ -49,6 +49,9 @@ static void my_application_activate(GApplication* application) {
 
   gtk_window_set_default_size(window, 1280, 720);
   
+  // Set the window role for proper GNOME integration
+  gtk_window_set_role(window, "blogster");
+  
   // Try to set the window icon - first try from the bundle, then from system
   if (!gtk_window_set_icon_from_file(window, "data/flutter_assets/assets/icons/blogster-64.png", nullptr)) {
     gtk_window_set_icon_name(window, "blogster");
