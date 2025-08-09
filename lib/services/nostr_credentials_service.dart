@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 import 'dart:math';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 import '../crypto/corrected_bip340_schnorr.dart';
 
 class NostrCredential {
@@ -63,11 +63,7 @@ class NostrCredential {
 }
 
 class NostrCredentialsService {
-  static const _storage = FlutterSecureStorage(
-    aOptions: AndroidOptions(
-      encryptedSharedPreferences: true,
-    ),
-  );
+  static final _storage = EncryptedSharedPreferences();
 
   static const String _credentialsKey = 'nostr_credentials';
   static const String _defaultCredentialKey = 'default_nostr_credential';
@@ -75,8 +71,8 @@ class NostrCredentialsService {
   /// Get all stored Nostr credentials
   Future<List<NostrCredential>> getCredentials() async {
     try {
-      final credentialsJson = await _storage.read(key: _credentialsKey);
-      if (credentialsJson == null) {
+      final credentialsJson = await _storage.getString(_credentialsKey);
+      if (credentialsJson.isEmpty) {
         return [];
       }
 
@@ -113,11 +109,11 @@ class NostrCredentialsService {
       // Save back to storage
       final credentialsJson =
           jsonEncode(credentials.map((c) => c.toJson()).toList());
-      await _storage.write(key: _credentialsKey, value: credentialsJson);
+      await _storage.setString(_credentialsKey, credentialsJson);
 
       // Update default credential reference if needed
       if (credential.isDefault) {
-        await _storage.write(key: _defaultCredentialKey, value: credential.id);
+        await _storage.setString(_defaultCredentialKey, credential.id);
       }
     } catch (e) {
       print('Error saving credential: $e');
@@ -137,16 +133,15 @@ class NostrCredentialsService {
       // If we deleted the default, set first remaining as default
       if (wasDefault && credentials.isNotEmpty) {
         credentials[0] = credentials[0].copyWith(isDefault: true);
-        await _storage.write(
-            key: _defaultCredentialKey, value: credentials[0].id);
+        await _storage.setString(_defaultCredentialKey, credentials[0].id);
       } else if (credentials.isEmpty) {
-        await _storage.delete(key: _defaultCredentialKey);
+        await _storage.remove(_defaultCredentialKey);
       }
 
       // Save updated list
       final credentialsJson =
           jsonEncode(credentials.map((c) => c.toJson()).toList());
-      await _storage.write(key: _credentialsKey, value: credentialsJson);
+      await _storage.setString(_credentialsKey, credentialsJson);
     } catch (e) {
       print('Error deleting credential: $e');
       rethrow;
@@ -199,8 +194,8 @@ class NostrCredentialsService {
       // Save updated list
       final credentialsJson =
           jsonEncode(credentials.map((c) => c.toJson()).toList());
-      await _storage.write(key: _credentialsKey, value: credentialsJson);
-      await _storage.write(key: _defaultCredentialKey, value: credentialId);
+      await _storage.setString(_credentialsKey, credentialsJson);
+      await _storage.setString(_defaultCredentialKey, credentialId);
     } catch (e) {
       print('Error setting default credential: $e');
       rethrow;
@@ -277,8 +272,8 @@ class NostrCredentialsService {
   /// Clear all stored credentials (for testing/reset)
   Future<void> clearAllCredentials() async {
     try {
-      await _storage.delete(key: _credentialsKey);
-      await _storage.delete(key: _defaultCredentialKey);
+      await _storage.remove(_credentialsKey);
+      await _storage.remove(_defaultCredentialKey);
     } catch (e) {
       print('Error clearing credentials: $e');
       rethrow;

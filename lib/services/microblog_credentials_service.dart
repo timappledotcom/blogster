@@ -12,7 +12,7 @@ class MicroblogCredentialsService {
   Future<List<MicroblogCredential>> getAllCredentials() async {
     try {
       final credentialsJson = await _storage.getString(_storageKey);
-      if (credentialsJson == null || credentialsJson.isEmpty) return [];
+      if (credentialsJson.isEmpty) return [];
 
       final List<dynamic> credentialsList = jsonDecode(credentialsJson);
       return credentialsList
@@ -114,7 +114,7 @@ class MicroblogCredentialsService {
   /// Get default credential
   Future<MicroblogCredential?> getDefaultCredential() async {
     final defaultId = await _storage.getString(_defaultCredentialKey);
-    if (defaultId == null || defaultId.isEmpty) return null;
+    if (defaultId.isEmpty) return null;
 
     final credentials = await getAllCredentials();
     try {

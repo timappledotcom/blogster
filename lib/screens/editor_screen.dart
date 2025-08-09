@@ -14,6 +14,7 @@ import '../widgets/publish_dialog.dart';
 import '../widgets/syntax_highlighter.dart';
 import '../widgets/library_sidebar.dart';
 import '../widgets/tag_input.dart';
+import '../widgets/ubuntu_header_bar.dart';
 import 'settings_screen.dart';
 
 class EditorScreen extends StatefulWidget {
@@ -25,6 +26,7 @@ class EditorScreen extends StatefulWidget {
 
 class _EditorScreenState extends State<EditorScreen> {
   final TextEditingController _controller = TextEditingController();
+  final TextEditingController _titleController = TextEditingController();
   final ScrollController _editScrollController = ScrollController();
   final ScrollController _previewScrollController = ScrollController();
   Timer? _autoSaveTimer;
@@ -38,8 +40,15 @@ class _EditorScreenState extends State<EditorScreen> {
         Provider.of<LibraryProvider>(context, listen: false);
 
     _controller.text = editorProvider.content;
+    _titleController.text = editorProvider.title;
+
     _controller.addListener(() {
       editorProvider.updateContent(_controller.text);
+      _startAutoSaveTimer();
+    });
+
+    _titleController.addListener(() {
+      editorProvider.setTitle(_titleController.text);
       _startAutoSaveTimer();
     });
 
@@ -71,6 +80,9 @@ class _EditorScreenState extends State<EditorScreen> {
     if (_controller.text != editorProvider.content) {
       _controller.text = editorProvider.content;
     }
+    if (_titleController.text != editorProvider.title) {
+      _titleController.text = editorProvider.title;
+    }
   }
 
   void _startAutoSaveTimer() {
@@ -95,6 +107,7 @@ class _EditorScreenState extends State<EditorScreen> {
     editorProvider.removeListener(_updateControllerFromProvider);
     _autoSaveTimer?.cancel();
     _controller.dispose();
+    _titleController.dispose();
     _editScrollController.dispose();
     _previewScrollController.dispose();
     super.dispose();
@@ -106,54 +119,10 @@ class _EditorScreenState extends State<EditorScreen> {
     final isMobile = screenWidth < 768; // Mobile breakpoint
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Blogster'),
-        leading: isMobile
-            ? Builder(
-                builder: (context) => IconButton(
-                  icon: const Icon(Icons.menu),
-                  onPressed: () => Scaffold.of(context).openDrawer(),
-                  tooltip: 'Open Library',
-                ),
-              )
-            : null,
-        actions: [
-          Consumer<EditorProvider>(
-            builder: (context, provider, child) {
-              return Row(
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.add),
-                    onPressed: provider.newFile,
-                    tooltip: 'New File',
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.folder_open),
-                    onPressed: provider.openFile,
-                    tooltip: 'Open File',
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.save_as),
-                    onPressed: provider.saveAsFile,
-                    tooltip: 'Save As',
-                  ),
-                  const SizedBox(width: 8),
-                  IconButton(
-                    icon: const Icon(Icons.share),
-                    onPressed: () => _showPublishDialog(context),
-                    tooltip: 'Publish Post',
-                  ),
-                  const SizedBox(width: 8),
-                  IconButton(
-                    icon: const Icon(Icons.settings),
-                    onPressed: () => _showSettings(context),
-                    tooltip: 'Settings',
-                  ),
-                ],
-              );
-            },
-          ),
-        ],
+      appBar: UbuntuHeaderBar(
+        isMobile: isMobile,
+        onPublish: () => _showPublishDialog(context),
+        onSettings: () => _showSettings(context),
       ),
       drawer: isMobile ? const LibrarySidebar() : null,
       body: Row(
@@ -163,6 +132,7 @@ class _EditorScreenState extends State<EditorScreen> {
             child: Column(
               children: [
                 const EditorToolbar(),
+                _buildTitleSection(),
                 _buildTagsSection(),
                 Expanded(
                   child: Consumer<EditorProvider>(
@@ -361,6 +331,74 @@ class _EditorScreenState extends State<EditorScreen> {
       MaterialPageRoute(
         builder: (context) => const SettingsScreen(),
       ),
+    );
+  }
+
+  Widget _buildTitleSection() {
+    return Consumer2<EditorProvider, LibraryProvider>(
+      builder: (context, editorProvider, libraryProvider, child) {
+        // Determine which title to show and edit permissions
+        final currentDocument = libraryProvider.currentDocument;
+        final isViewingDocument = currentDocument != null;
+        final canEdit = !isViewingDocument || !currentDocument.isPosted;
+
+        return Card(
+          margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          child: Padding(
+            padding: const EdgeInsets.all(12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Icon(
+                      Icons.title,
+                      size: 16,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      isViewingDocument && currentDocument.isPosted
+                          ? 'Published Title'
+                          : 'Post Title',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                TextField(
+                  controller: _titleController,
+                  enabled: canEdit,
+                  decoration: InputDecoration(
+                    hintText: canEdit
+                        ? 'Enter post title...'
+                        : 'No title was set for this post',
+                    border: const OutlineInputBorder(),
+                    isDense: true,
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 8,
+                    ),
+                  ),
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    color: canEdit
+                        ? Theme.of(context).colorScheme.onSurface
+                        : Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withOpacity(0.6),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 

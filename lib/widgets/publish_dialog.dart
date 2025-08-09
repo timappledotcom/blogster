@@ -8,7 +8,6 @@ import '../services/nostr_service.dart';
 import '../services/microblog_service.dart';
 import '../screens/nostr_credentials_screen.dart';
 import '../widgets/microblog_credentials_screen.dart';
-import 'tag_input.dart';
 import 'category_selector.dart';
 
 enum PublishPlatform { nostr, microblog, both }
@@ -21,7 +20,6 @@ class PublishDialog extends StatefulWidget {
 }
 
 class _PublishDialogState extends State<PublishDialog> {
-  final _titleController = TextEditingController();
   final _relaysController = TextEditingController(
     text: 'wss://relay.damus.io,wss://nos.lol,wss://relay.snort.social',
   );
@@ -37,7 +35,6 @@ class _PublishDialogState extends State<PublishDialog> {
 
   @override
   void dispose() {
-    _titleController.dispose();
     _relaysController.dispose();
     super.dispose();
   }
@@ -176,16 +173,6 @@ class _PublishDialogState extends State<PublishDialog> {
 
                 const SizedBox(height: 16),
 
-                // Title Field
-                TextField(
-                  controller: _titleController,
-                  decoration: const InputDecoration(
-                    labelText: 'Title (optional)',
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-                const SizedBox(height: 16),
-
                 // Platform-specific fields
                 if (_selectedPlatform == PublishPlatform.nostr) ...[
                   TextField(
@@ -197,21 +184,6 @@ class _PublishDialogState extends State<PublishDialog> {
                     maxLines: 3,
                   ),
                   const SizedBox(height: 16),
-                ],
-
-                // Tags Input (only for Nostr, Micro.blog uses categories above)
-                if (_selectedPlatform == PublishPlatform.nostr) ...[
-                  const Text(
-                    'Tags:',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 8),
-                  TagInput(
-                    tags: editorProvider.tags,
-                    onTagAdd: editorProvider.addTag,
-                    onTagRemove: editorProvider.removeTag,
-                    hint: 'Add tags for this post...',
-                  ),
                 ],
               ],
             ),
@@ -644,7 +616,7 @@ class _PublishDialogState extends State<PublishDialog> {
     });
 
     try {
-      final title = _titleController.text.trim();
+      final title = editorProvider.title.trim();
 
       if (_selectedPlatform == PublishPlatform.nostr) {
         await _publishToNostr(editorProvider, nostrProvider, title);
@@ -805,8 +777,9 @@ class _PublishDialogState extends State<PublishDialog> {
     String title,
   ) async {
     final credential = microblogProvider.currentCredential;
-    if (credential == null)
+    if (credential == null) {
       throw Exception('No Micro.blog credential selected');
+    }
 
     final microblogService = MicroblogService();
     await microblogService.publishPost(

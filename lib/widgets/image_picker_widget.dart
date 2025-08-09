@@ -269,7 +269,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
         if (context.mounted) {
           Navigator.pop(context);
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
+            const SnackBar(
               content:
                   Text('Image uploaded and inserted! URL copied to clipboard.'),
               backgroundColor: Colors.green,

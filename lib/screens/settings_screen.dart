@@ -3,6 +3,7 @@ import 'settings/appearance_settings_screen.dart';
 import 'settings/help_settings_screen.dart';
 import 'settings/about_settings_screen.dart';
 import 'settings/support_settings_screen.dart';
+import '../widgets/ubuntu_about_dialog.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -50,6 +51,17 @@ class SettingsScreen extends StatelessWidget {
               MaterialPageRoute(
                 builder: (context) => const AboutSettingsScreen(),
               ),
+            ),
+          ),
+          const SizedBox(height: 8),
+          _buildSettingsItem(
+            context,
+            icon: Icons.design_services,
+            title: 'Ubuntu Design',
+            subtitle: 'Learn about our Ubuntu Yaru design language',
+            onTap: () => showDialog(
+              context: context,
+              builder: (context) => const UbuntuAboutDialog(),
             ),
           ),
           const SizedBox(height: 8),

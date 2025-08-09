@@ -1,0 +1,13 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Blogster
+GenericName=Markdown Editor
+Comment=Beautiful markdown editor for modern writers with Ubuntu design
+Exec=/home/tim/.local/bin/blogster
+Icon=blogster
+Terminal=false
+Categories=Office;TextEditor;Development;
+MimeType=text/markdown;text/plain;
+Keywords=markdown;editor;blog;writing;nostr;
+StartupNotify=true

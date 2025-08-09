@@ -71,6 +71,7 @@ greetUser('Developer');
   bool _isLoading = false;
   String? _error;
   List<String> _tags = [];
+  String _title = '';
 
   final NostrService _nostrService = NostrService();
 
@@ -80,6 +81,7 @@ greetUser('Developer');
   bool get isLoading => _isLoading;
   String? get error => _error;
   List<String> get tags => List.unmodifiable(_tags);
+  String get title => _title;
 
   void updateContent(String newContent) {
     _content = newContent;
@@ -117,6 +119,16 @@ greetUser('Developer');
     notifyListeners();
   }
 
+  void setTitle(String newTitle) {
+    _title = newTitle;
+    notifyListeners();
+  }
+
+  void clearTitle() {
+    _title = '';
+    notifyListeners();
+  }
+
   void clearError() {
     _error = null;
     notifyListeners();
@@ -125,6 +137,8 @@ greetUser('Developer');
   Future<void> newFile() async {
     _content = '';
     _currentFilePath = null;
+    _title = '';
+    _tags.clear();
     notifyListeners();
   }
 

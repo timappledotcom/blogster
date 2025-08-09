@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../providers/theme_provider.dart';
 
 class TagInput extends StatefulWidget {
   final List<String> tags;
@@ -39,15 +41,31 @@ class _TagInputState extends State<TagInput> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Tag input field
+        // Tag input field with Ubuntu styling
         TextField(
           controller: _controller,
           focusNode: _focusNode,
+          style: const TextStyle(
+            fontFamily: 'Ubuntu',
+            fontSize: 14,
+          ),
           decoration: InputDecoration(
             hintText: widget.hint ?? 'Add tags (press Enter)',
+            hintStyle: TextStyle(
+              fontFamily: 'Ubuntu',
+              color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
+            ),
+            prefixIcon: Icon(
+              Icons.tag,
+              size: 18,
+              color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
+            ),
             border: const OutlineInputBorder(),
             suffixIcon: IconButton(
               icon: const Icon(Icons.add),
@@ -71,16 +89,44 @@ class _TagInputState extends State<TagInput> {
   }
 
   Widget _buildTagChip(String tag) {
-    return Chip(
-      label: Text(
-        '#$tag',
-        style: const TextStyle(fontSize: 12),
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    final accentColor = themeProvider.accentColor
+        .getColor(Theme.of(context).brightness == Brightness.dark);
+
+    return Container(
+      decoration: BoxDecoration(
+        color: accentColor.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: accentColor.withOpacity(0.3),
+          width: 1,
+        ),
       ),
-      deleteIcon: const Icon(Icons.close, size: 16),
-      onDeleted: () => widget.onTagRemove(tag),
-      backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-      labelStyle: TextStyle(
-        color: Theme.of(context).colorScheme.onPrimaryContainer,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              '#$tag',
+              style: TextStyle(
+                fontFamily: 'Ubuntu',
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+                color: accentColor,
+              ),
+            ),
+            const SizedBox(width: 6),
+            GestureDetector(
+              onTap: () => widget.onTagRemove(tag),
+              child: Icon(
+                Icons.close,
+                size: 14,
+                color: accentColor,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

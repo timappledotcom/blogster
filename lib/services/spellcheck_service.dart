@@ -33,7 +33,7 @@ class SpellcheckService {
   factory SpellcheckService() => _instance;
   SpellcheckService._internal();
 
-  Set<String> _dictionary = {};
+  final Set<String> _dictionary = {};
   bool _isInitialized = false;
 
   /// Initialize the spellcheck service with a basic English dictionary
@@ -608,8 +608,9 @@ class SpellcheckService {
 
   /// Check if a word is spelled correctly
   bool isWordCorrect(String word) {
-    if (!_isInitialized)
+    if (!_isInitialized) {
       return true; // Don't mark as incorrect if not initialized
+    }
 
     final cleanWord = word.toLowerCase().replaceAll(RegExp(r'[^\w]'), '');
     if (cleanWord.isEmpty) return true;

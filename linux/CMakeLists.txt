@@ -126,3 +126,46 @@ if(NOT CMAKE_BUILD_TYPE MATCHES "Debug")
   install(FILES "${AOT_LIBRARY}" DESTINATION "${INSTALL_BUNDLE_LIB_DIR}"
     COMPONENT Runtime)
 endif()
+
+# Install desktop file and icons
+install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/blogster.desktop"
+  DESTINATION "share/applications"
+  COMPONENT Runtime)
+
+# Install application icons
+install(FILES "../assets/icons/blogster-16.png"
+  DESTINATION "share/icons/hicolor/16x16/apps"
+  RENAME "blogster.png"
+  COMPONENT Runtime)
+install(FILES "../assets/icons/blogster-22.png"
+  DESTINATION "share/icons/hicolor/22x22/apps"
+  RENAME "blogster.png"
+  COMPONENT Runtime)
+install(FILES "../assets/icons/blogster-24.png"
+  DESTINATION "share/icons/hicolor/24x24/apps"
+  RENAME "blogster.png"
+  COMPONENT Runtime)
+install(FILES "../assets/icons/blogster-32.png"
+  DESTINATION "share/icons/hicolor/32x32/apps"
+  RENAME "blogster.png"
+  COMPONENT Runtime)
+install(FILES "../assets/icons/blogster-48.png"
+  DESTINATION "share/icons/hicolor/48x48/apps"
+  RENAME "blogster.png"
+  COMPONENT Runtime)
+install(FILES "../assets/icons/blogster-64.png"
+  DESTINATION "share/icons/hicolor/64x64/apps"
+  RENAME "blogster.png"
+  COMPONENT Runtime)
+install(FILES "../assets/icons/blogster-128.png"
+  DESTINATION "share/icons/hicolor/128x128/apps"
+  RENAME "blogster.png"
+  COMPONENT Runtime)
+install(FILES "../assets/icons/blogster-256.png"
+  DESTINATION "share/icons/hicolor/256x256/apps"
+  RENAME "blogster.png"
+  COMPONENT Runtime)
+install(FILES "../assets/icons/blogster-512.png"
+  DESTINATION "share/icons/hicolor/512x512/apps"
+  RENAME "blogster.png"
+  COMPONENT Runtime)

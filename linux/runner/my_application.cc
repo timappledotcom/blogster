@@ -48,6 +48,11 @@ static void my_application_activate(GApplication* application) {
   }
 
   gtk_window_set_default_size(window, 1280, 720);
+  
+  // Try to set the window icon - first try from the bundle, then from system
+  if (!gtk_window_set_icon_from_file(window, "data/flutter_assets/assets/icons/blogster-64.png", nullptr)) {
+    gtk_window_set_icon_name(window, "blogster");
+  }
   gtk_widget_show(GTK_WIDGET(window));
 
   g_autoptr(FlDartProject) project = fl_dart_project_new();
