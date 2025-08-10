@@ -88,7 +88,7 @@ Categories=Office;TextEditor;Development;
 MimeType=text/markdown;text/plain;
 Keywords=markdown;editor;blog;writing;nostr;
 StartupNotify=true
-StartupWMClass=blogster
+StartupWMClass=com.example.blogster
 EOF
 
 # Update system databases

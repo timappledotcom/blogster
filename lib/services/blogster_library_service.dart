@@ -162,6 +162,52 @@ class BlogsterLibraryService {
     return document;
   }
 
+  /// Create a new document with details (title, tags)
+  Future<BlogsterDocument> createDocumentWithDetails(
+    String content, {
+    String? customFilename,
+    String? title,
+    List<String>? tags,
+  }) async {
+    if (_libraryPath == null) {
+      throw Exception('Library not initialized');
+    }
+
+    final finalTitle = title?.isNotEmpty == true 
+        ? title! 
+        : BlogsterDocument.extractTitle(content);
+    final filename = customFilename ?? BlogsterDocument.generateFilename(finalTitle);
+    final filePath = path.join(_libraryPath!, filename);
+
+    // Ensure unique filename
+    final uniqueFilePath = await _ensureUniqueFilename(filePath);
+    final uniqueFilename = path.basename(uniqueFilePath);
+
+    final now = DateTime.now();
+    final document = BlogsterDocument(
+      id: _generateId(uniqueFilePath),
+      filename: uniqueFilename,
+      title: finalTitle,
+      content: content,
+      createdAt: now,
+      modifiedAt: now,
+      isPosted: false,
+      filePath: uniqueFilePath,
+      tags: tags ?? [],
+    );
+
+    // Save to file
+    final file = File(uniqueFilePath);
+    await file.writeAsString(content);
+
+    _documents[document.id] = document;
+    await _saveMetadata();
+    await _saveDocumentMetadata(document);
+
+    print('Created document: $uniqueFilename');
+    return document;
+  }
+
   /// Update an existing document
   Future<BlogsterDocument> updateDocument(
       String documentId, String content) async {
@@ -183,6 +229,40 @@ class BlogsterLibraryService {
 
     _documents[documentId] = updatedDocument;
     await _saveMetadata();
+
+    return updatedDocument;
+  }
+
+  /// Update an existing document with content, title, and tags
+  Future<BlogsterDocument> updateDocumentWithDetails(
+    String documentId, 
+    String content, {
+    String? title,
+    List<String>? tags,
+  }) async {
+    final document = _documents[documentId];
+    if (document == null) {
+      throw Exception('Document not found');
+    }
+
+    final finalTitle = title?.isNotEmpty == true 
+        ? title! 
+        : BlogsterDocument.extractTitle(content);
+    
+    final updatedDocument = document.copyWith(
+      title: finalTitle,
+      content: content,
+      modifiedAt: DateTime.now(),
+      tags: tags ?? document.tags,
+    );
+
+    // Save to file
+    final file = File(document.filePath);
+    await file.writeAsString(content);
+
+    _documents[documentId] = updatedDocument;
+    await _saveMetadata();
+    await _saveDocumentMetadata(updatedDocument);
 
     return updatedDocument;
   }

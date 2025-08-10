@@ -531,8 +531,10 @@ class _LibrarySidebarState extends State<LibrarySidebar> {
     final newDocument = await libraryProvider.createNewDocumentFile();
 
     if (newDocument != null) {
-      // Load the new document content into the editor
+      // Load the new document content into the editor and clear title/tags
       editorProvider.updateContent(newDocument.content);
+      editorProvider.setTitle(newDocument.title);
+      editorProvider.clearTags();
 
       // Close drawer on mobile after creating new document
       _closeMobileDrawer();
@@ -543,9 +545,12 @@ class _LibrarySidebarState extends State<LibrarySidebar> {
       BlogsterDocument document, LibraryProvider libraryProvider) async {
     await libraryProvider.loadDocument(document.id);
 
-    // Update editor content
+    // Update editor content, title, and tags
     if (mounted) {
-      context.read<EditorProvider>().updateContent(document.content);
+      final editorProvider = context.read<EditorProvider>();
+      editorProvider.updateContent(document.content);
+      editorProvider.setTitle(document.title);
+      editorProvider.setTags(document.tags);
 
       // Close drawer on mobile after loading document
       _closeMobileDrawer();

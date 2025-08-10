@@ -19,9 +19,7 @@ class YaruTheme {
       secondary: ubuntuPurple,
       tertiary: ubuntuAubergine,
       surface: Colors.white,
-      background: const Color(0xFFF6F6F6),
       onSurface: const Color(0xFF1D1D1D),
-      onBackground: const Color(0xFF1D1D1D),
     );
 
     return ThemeData(
@@ -32,13 +30,13 @@ class YaruTheme {
       textTheme: _buildTextTheme(ThemeData.light().textTheme, false),
 
       // Ubuntu-style app bar
-      appBarTheme: AppBarTheme(
+      appBarTheme: const AppBarTheme(
         backgroundColor: Colors.white,
-        foregroundColor: const Color(0xFF1D1D1D),
+        foregroundColor: Color(0xFF1D1D1D),
         elevation: 0,
         scrolledUnderElevation: 1,
         centerTitle: false,
-        titleTextStyle: const TextStyle(
+        titleTextStyle: TextStyle(
           fontFamily: 'Ubuntu',
           fontWeight: FontWeight.w500,
           fontSize: 20,
@@ -131,7 +129,7 @@ class YaruTheme {
         backgroundColor: Colors.white,
         surfaceTintColor: Colors.transparent,
         indicatorColor: primaryColor.withOpacity(0.1),
-        labelTextStyle: MaterialStateProperty.all(
+        labelTextStyle: WidgetStateProperty.all(
           const TextStyle(fontFamily: 'Ubuntu', fontWeight: FontWeight.w500),
         ),
       ),
@@ -169,9 +167,7 @@ class YaruTheme {
       secondary: ubuntuPurple,
       tertiary: ubuntuAubergine,
       surface: const Color(0xFF2D2D2D),
-      background: const Color(0xFF1D1D1D),
       onSurface: Colors.white,
-      onBackground: Colors.white,
     );
 
     return ThemeData(
@@ -182,13 +178,13 @@ class YaruTheme {
       textTheme: _buildTextTheme(ThemeData.dark().textTheme, true),
 
       // Ubuntu-style app bar
-      appBarTheme: AppBarTheme(
-        backgroundColor: const Color(0xFF2D2D2D),
+      appBarTheme: const AppBarTheme(
+        backgroundColor: Color(0xFF2D2D2D),
         foregroundColor: Colors.white,
         elevation: 0,
         scrolledUnderElevation: 1,
         centerTitle: false,
-        titleTextStyle: const TextStyle(
+        titleTextStyle: TextStyle(
           fontFamily: 'Ubuntu',
           fontWeight: FontWeight.w500,
           fontSize: 20,
@@ -281,7 +277,7 @@ class YaruTheme {
         backgroundColor: const Color(0xFF2D2D2D),
         surfaceTintColor: Colors.transparent,
         indicatorColor: primaryColor.withOpacity(0.2),
-        labelTextStyle: MaterialStateProperty.all(
+        labelTextStyle: WidgetStateProperty.all(
           const TextStyle(fontFamily: 'Ubuntu', fontWeight: FontWeight.w500),
         ),
       ),

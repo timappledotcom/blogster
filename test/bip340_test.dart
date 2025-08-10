@@ -1,7 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:blogster/crypto/corrected_bip340_schnorr.dart';
 import 'dart:typed_data';
-import 'dart:convert';
 
 void main() {
   group('BIP-340 Schnorr Signature Tests', () {

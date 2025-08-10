@@ -2,7 +2,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:blogster/crypto/corrected_bip340_schnorr.dart';
 import 'package:blogster/services/nostr_service.dart';
 import 'dart:typed_data';
-import 'dart:convert';
 
 void main() {
   group('Comprehensive Nostr BIP-340 Tests', () {

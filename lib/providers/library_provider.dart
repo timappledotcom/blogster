@@ -71,6 +71,59 @@ class LibraryProvider extends ChangeNotifier {
     }
   }
 
+  /// Update the current document with details (title, tags)
+  Future<void> updateCurrentDocumentWithDetails(
+    String content, {
+    String? title,
+    List<String>? tags,
+  }) async {
+    if (_currentDocument == null) {
+      // Create new document if none exists
+      await createDocumentWithDetails(content, title: title, tags: tags);
+      return;
+    }
+
+    _setError(null);
+
+    try {
+      final updatedDocument = await _libraryService.updateDocumentWithDetails(
+        _currentDocument!.id, 
+        content, 
+        title: title, 
+        tags: tags,
+      );
+      _currentDocument = updatedDocument;
+      notifyListeners();
+    } catch (e) {
+      _setError('Failed to update document: $e');
+    }
+  }
+
+  /// Create a new document with details (title, tags)
+  Future<BlogsterDocument?> createDocumentWithDetails(
+    String content, {
+    String? customFilename,
+    String? title,
+    List<String>? tags,
+  }) async {
+    _setError(null);
+
+    try {
+      final document = await _libraryService.createDocumentWithDetails(
+        content,
+        customFilename: customFilename,
+        title: title,
+        tags: tags,
+      );
+      _currentDocument = document;
+      notifyListeners();
+      return document;
+    } catch (e) {
+      _setError('Failed to create document: $e');
+      return null;
+    }
+  }
+
   /// Load a document as current
   Future<void> loadDocument(String documentId) async {
     _setError(null);
@@ -209,6 +262,48 @@ class LibraryProvider extends ChangeNotifier {
       // Update existing document
       await updateCurrentDocument(content);
     }
+  }
+
+  /// Auto-save current document with details (title, tags from EditorProvider)
+  Future<void> autoSaveWithDetails(
+    String content, {
+    String? title,
+    List<String>? tags,
+  }) async {
+    // For empty content, only create a document if there's no current document
+    // and the user is actively typing (we'll create it on first character)
+    if (content.trim().isEmpty) {
+      return; // Don't auto-save empty content
+    }
+
+    if (_currentDocument == null) {
+      // Create new document for non-empty content with details
+      await createDocumentWithDetails(content, title: title, tags: tags);
+    } else if (hasUnsavedChanges(content) || hasUnsavedDetails(title, tags)) {
+      // Update existing document with details
+      await updateCurrentDocumentWithDetails(content, title: title, tags: tags);
+    }
+  }
+
+  /// Check if there are unsaved details (title or tags)
+  bool hasUnsavedDetails(String? title, List<String>? tags) {
+    if (_currentDocument == null) return false;
+
+    // Check title changes
+    if (title != null && title.isNotEmpty && title != _currentDocument!.title) {
+      return true;
+    }
+
+    // Check tags changes
+    if (tags != null) {
+      final currentTags = Set<String>.from(_currentDocument!.tags);
+      final newTags = Set<String>.from(tags);
+      if (currentTags.length != newTags.length || !currentTags.containsAll(newTags)) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   /// Create a new document immediately (for "New" button)

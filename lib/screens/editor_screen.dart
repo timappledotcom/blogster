@@ -77,12 +77,17 @@ class _EditorScreenState extends State<EditorScreen> {
 
   void _updateControllerFromProvider() {
     final editorProvider = Provider.of<EditorProvider>(context, listen: false);
+
     if (_controller.text != editorProvider.content) {
       _controller.text = editorProvider.content;
     }
     if (_titleController.text != editorProvider.title) {
       _titleController.text = editorProvider.title;
     }
+
+    // Trigger auto-save for tag changes (since we can't directly detect tag changes)
+    // We'll auto-save whenever the provider notifies, but with a timer to avoid too frequent saves
+    _startAutoSaveTimer();
   }
 
   void _startAutoSaveTimer() {
@@ -94,10 +99,21 @@ class _EditorScreenState extends State<EditorScreen> {
 
   Future<void> _autoSave() async {
     final libraryProvider = context.read<LibraryProvider>();
+    final editorProvider = context.read<EditorProvider>();
     final content = _controller.text;
 
     if (content.trim().isNotEmpty) {
-      await libraryProvider.autoSave(content);
+      // Get title and tags from EditorProvider and UI controllers
+      final title = _titleController.text.trim().isNotEmpty 
+          ? _titleController.text.trim() 
+          : null;
+      final tags = editorProvider.tags;
+
+      await libraryProvider.autoSaveWithDetails(
+        content, 
+        title: title,
+        tags: tags.isNotEmpty ? tags : null,
+      );
     }
   }
 
