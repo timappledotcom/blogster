@@ -87,9 +87,9 @@ class LibraryProvider extends ChangeNotifier {
 
     try {
       final updatedDocument = await _libraryService.updateDocumentWithDetails(
-        _currentDocument!.id, 
-        content, 
-        title: title, 
+        _currentDocument!.id,
+        content,
+        title: title,
         tags: tags,
       );
       _currentDocument = updatedDocument;
@@ -298,7 +298,8 @@ class LibraryProvider extends ChangeNotifier {
     if (tags != null) {
       final currentTags = Set<String>.from(_currentDocument!.tags);
       final newTags = Set<String>.from(tags);
-      if (currentTags.length != newTags.length || !currentTags.containsAll(newTags)) {
+      if (currentTags.length != newTags.length ||
+          !currentTags.containsAll(newTags)) {
         return true;
       }
     }

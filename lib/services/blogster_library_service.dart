@@ -173,10 +173,11 @@ class BlogsterLibraryService {
       throw Exception('Library not initialized');
     }
 
-    final finalTitle = title?.isNotEmpty == true 
-        ? title! 
+    final finalTitle = title?.isNotEmpty == true
+        ? title!
         : BlogsterDocument.extractTitle(content);
-    final filename = customFilename ?? BlogsterDocument.generateFilename(finalTitle);
+    final filename =
+        customFilename ?? BlogsterDocument.generateFilename(finalTitle);
     final filePath = path.join(_libraryPath!, filename);
 
     // Ensure unique filename
@@ -235,7 +236,7 @@ class BlogsterLibraryService {
 
   /// Update an existing document with content, title, and tags
   Future<BlogsterDocument> updateDocumentWithDetails(
-    String documentId, 
+    String documentId,
     String content, {
     String? title,
     List<String>? tags,
@@ -245,10 +246,10 @@ class BlogsterLibraryService {
       throw Exception('Document not found');
     }
 
-    final finalTitle = title?.isNotEmpty == true 
-        ? title! 
+    final finalTitle = title?.isNotEmpty == true
+        ? title!
         : BlogsterDocument.extractTitle(content);
-    
+
     final updatedDocument = document.copyWith(
       title: finalTitle,
       content: content,

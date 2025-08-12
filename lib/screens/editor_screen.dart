@@ -104,13 +104,13 @@ class _EditorScreenState extends State<EditorScreen> {
 
     if (content.trim().isNotEmpty) {
       // Get title and tags from EditorProvider and UI controllers
-      final title = _titleController.text.trim().isNotEmpty 
-          ? _titleController.text.trim() 
+      final title = _titleController.text.trim().isNotEmpty
+          ? _titleController.text.trim()
           : null;
       final tags = editorProvider.tags;
 
       await libraryProvider.autoSaveWithDetails(
-        content, 
+        content,
         title: title,
         tags: tags.isNotEmpty ? tags : null,
       );

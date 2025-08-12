@@ -102,18 +102,19 @@ class ThemeProvider extends ChangeNotifier {
   // Load theme settings from SharedPreferences
   Future<void> loadThemeSettings() async {
     final prefs = await SharedPreferences.getInstance();
-    
+
     // Load theme mode
     final themeIndex = prefs.getInt('theme_mode') ?? ThemeMode.system.index;
     _themeMode = ThemeMode.values[themeIndex];
-    
+
     // Load accent color
-    final accentColorName = prefs.getString('accent_color') ?? UbuntuAccentColor.orange.name;
+    final accentColorName =
+        prefs.getString('accent_color') ?? UbuntuAccentColor.orange.name;
     _accentColor = UbuntuAccentColor.values.firstWhere(
       (color) => color.name == accentColorName,
       orElse: () => UbuntuAccentColor.orange,
     );
-    
+
     _isLoaded = true;
     notifyListeners();
   }
